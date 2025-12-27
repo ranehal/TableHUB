@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import Spline from '@splinetool/react-spline';
+import { useState, useEffect, useRef } from 'react';
+import { Application } from '@splinetool/runtime';
 import { Search, MapPin, Star, Calendar, User, History, Home, Compass, Tag, Heart, Bell, HelpCircle, X, Coffee, Sun, Sunset, Moon, Utensils, ChevronRight } from 'lucide-react';
 import { mockRestaurants, mockMenuItems } from '../../data/mockData';
 import { Restaurant } from '../../types';
@@ -22,6 +22,14 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
   const [showNotifications, setShowNotifications] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [showOffers, setShowOffers] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+  useEffect(() => {
+    if (canvasRef.current) {
+      const app = new Application(canvasRef.current);
+      app.load('https://prod.spline.design/TS91-wcgqLHYx5Nd/scene.splinecode');
+    }
+  }, []);
   
   const categories = ['Biryani', 'Rice', 'Seafood', 'Main Course', 'Appetizers', 'Breads', 'Desserts', 'Drinks'];
   
@@ -529,7 +537,7 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
                     </div>
                   }
                 >
-                  <Spline scene="https://prod.spline.design/cef26586-3853-44bb-b42b-cc462e774e8b/scene.splinecode" />
+                  <canvas ref={canvasRef} className="w-full h-full" />
                 </ErrorBoundary>
               </div>
             </div>
