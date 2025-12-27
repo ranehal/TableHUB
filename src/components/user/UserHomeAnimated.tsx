@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Spline from '@splinetool/react-spline';
 import { Search, MapPin, Star, Calendar, User, History, Home, Compass, Tag, Heart, Bell, HelpCircle, X, Coffee, Sun, Sunset, Moon, Utensils, ChevronRight } from 'lucide-react';
 import { mockRestaurants, mockMenuItems } from '../../data/mockData';
 import { Restaurant } from '../../types';
@@ -528,17 +529,7 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
                     </div>
                   }
                 >
-                  <spline-viewer 
-                    className="w-full h-full"
-                    loading-anim-type="spinner-small-dark" 
-                    url="https://prod.spline.design/cef26586-3853-44bb-b42b-cc462e774e8b/scene.splinecode"
-                  >
-                    <img 
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAANCAYAAADISGwcAAAG1ElEQVR4AQCBAH7/ANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMAAIEAfv8A035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwAAgQB+/wDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jAACBAH7/ANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMAAIEAfv8A035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwAAgQB+/wDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jAACBAH7/ANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMAAIEAfv8A035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwAAgQB+/wDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jAACBAH7/ANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMAAIEAfv8A035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwAAgQB+/wDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jAAGBAH7/ANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMA035jANN+YwDTfmMARCrEn9IQSgcAAAAASUVORK5CYII=" 
-                      alt="Spline preview" 
-                      style={{ width: '100%', height: '100%' }}
-                    />
-                  </spline-viewer>
+                  <Spline scene="https://prod.spline.design/cef26586-3853-44bb-b42b-cc462e774e8b/scene.splinecode" />
                 </ErrorBoundary>
               </div>
             </div>
