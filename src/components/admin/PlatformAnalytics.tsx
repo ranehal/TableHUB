@@ -33,81 +33,81 @@ export function PlatformAnalytics() {
   return (
     <div>
       <div className="mb-8">
-        <h2 className="mb-2">Platform Analytics</h2>
-        <p className="text-gray-600">View platform-wide performance metrics</p>
+        <h2 className="mb-2 dark:text-white">Platform Analytics</h2>
+        <p className="text-gray-600 dark:text-gray-400">View platform-wide performance metrics</p>
       </div>
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <DollarSign className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+              <DollarSign className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
-            <span className="text-green-600 flex items-center gap-1">
+            <span className="text-green-600 dark:text-green-400 flex items-center gap-1">
               <TrendingUp className="w-4 h-4" />
               +18%
             </span>
           </div>
-          <p className="text-gray-600 mb-1">Total Revenue (Nov)</p>
-          <h3 className="text-blue-600">$89,450</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-1">Total Revenue (Nov)</p>
+          <h3 className="text-blue-600 dark:text-blue-400">$89,450</h3>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <Store className="w-6 h-6 text-green-600" />
+            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+              <Store className="w-6 h-6 text-green-600 dark:text-green-400" />
             </div>
-            <span className="text-green-600 flex items-center gap-1">
+            <span className="text-green-600 dark:text-green-400 flex items-center gap-1">
               <TrendingUp className="w-4 h-4" />
               +5
             </span>
           </div>
-          <p className="text-gray-600 mb-1">Total Restaurants</p>
-          <h3 className="text-green-600">127</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-1">Total Restaurants</p>
+          <h3 className="text-green-600 dark:text-green-400">127</h3>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-yellow-600" />
+            <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+              <Users className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
             </div>
-            <span className="text-green-600 flex items-center gap-1">
+            <span className="text-green-600 dark:text-green-400 flex items-center gap-1">
               <TrendingUp className="w-4 h-4" />
               +234
             </span>
           </div>
-          <p className="text-gray-600 mb-1">Total Users</p>
-          <h3 className="text-yellow-600">12,458</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-1">Total Users</p>
+          <h3 className="text-yellow-600 dark:text-yellow-400">12,458</h3>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-purple-600" />
+            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-purple-600 dark:text-purple-400" />
             </div>
-            <span className="text-green-600 flex items-center gap-1">
+            <span className="text-green-600 dark:text-green-400 flex items-center gap-1">
               <TrendingUp className="w-4 h-4" />
               +25%
             </span>
           </div>
-          <p className="text-gray-600 mb-1">Total Bookings</p>
-          <h3 className="text-purple-600">8,932</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-1">Total Bookings</p>
+          <h3 className="text-purple-600 dark:text-purple-400">8,932</h3>
         </div>
       </div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         {/* Revenue & Bookings */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h3 className="mb-6">Revenue & Bookings Trend</h3>
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
+          <h3 className="mb-6 dark:text-white">Revenue & Bookings Trend</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis yAxisId="left" />
-              <YAxis yAxisId="right" orientation="right" />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+              <XAxis dataKey="month" stroke="#888" />
+              <YAxis yAxisId="left" stroke="#888" />
+              <YAxis yAxisId="right" orientation="right" stroke="#888" />
+              <Tooltip contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid #333' }} />
               <Legend />
               <Line yAxisId="left" type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={2} name="Revenue ($)" />
               <Line yAxisId="right" type="monotone" dataKey="bookings" stroke="#10b981" strokeWidth={2} name="Bookings" />
@@ -116,14 +116,14 @@ export function PlatformAnalytics() {
         </div>
 
         {/* Restaurant Growth */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h3 className="mb-6">Restaurant Growth</h3>
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
+          <h3 className="mb-6 dark:text-white">Restaurant Growth</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={restaurantGrowth}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+              <XAxis dataKey="month" stroke="#888" />
+              <YAxis stroke="#888" />
+              <Tooltip contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid #333' }} />
               <Legend />
               <Bar dataKey="restaurants" fill="#8b5cf6" name="Active Restaurants" />
             </BarChart>
@@ -133,41 +133,41 @@ export function PlatformAnalytics() {
 
       {/* Platform Health */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h4 className="mb-4">Revenue Distribution</h4>
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
+          <h4 className="mb-4 dark:text-white">Revenue Distribution</h4>
           <div className="space-y-3">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-gray-700">Booking Fees</span>
-                <span className="text-gray-600">65%</span>
+                <span className="text-gray-700 dark:text-gray-300">Booking Fees</span>
+                <span className="text-gray-600 dark:text-gray-400">65%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="w-full bg-gray-200 dark:bg-[#3a3a3a] rounded-full h-3">
                 <div className="bg-blue-600 h-3 rounded-full" style={{ width: '65%' }}></div>
               </div>
             </div>
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-gray-700">Commission</span>
-                <span className="text-gray-600">25%</span>
+                <span className="text-gray-700 dark:text-gray-300">Commission</span>
+                <span className="text-gray-600 dark:text-gray-400">25%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="w-full bg-gray-200 dark:bg-[#3a3a3a] rounded-full h-3">
                 <div className="bg-green-600 h-3 rounded-full" style={{ width: '25%' }}></div>
               </div>
             </div>
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-gray-700">Penalties</span>
-                <span className="text-gray-600">10%</span>
+                <span className="text-gray-700 dark:text-gray-300">Penalties</span>
+                <span className="text-gray-600 dark:text-gray-400">10%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="w-full bg-gray-200 dark:bg-[#3a3a3a] rounded-full h-3">
                 <div className="bg-yellow-600 h-3 rounded-full" style={{ width: '10%' }}></div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h4 className="mb-4">Top Performing Cities</h4>
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
+          <h4 className="mb-4 dark:text-white">Top Performing Cities</h4>
           <div className="space-y-3">
             {[
               { city: 'New York', bookings: 2340, revenue: 28080 },
@@ -177,22 +177,22 @@ export function PlatformAnalytics() {
             ].map((city, index) => (
               <div key={city.city} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <span className="text-blue-600">#{index + 1}</span>
+                  <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600 dark:text-blue-400">#{index + 1}</span>
                   </div>
                   <div>
-                    <p>{city.city}</p>
-                    <p className="text-gray-600">{city.bookings} bookings</p>
+                    <p className="dark:text-white">{city.city}</p>
+                    <p className="text-gray-600 dark:text-gray-400">{city.bookings} bookings</p>
                   </div>
                 </div>
-                <p className="text-green-600">${city.revenue.toLocaleString()}</p>
+                <p className="text-green-600 dark:text-green-400">${city.revenue.toLocaleString()}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h4 className="mb-4">Top Cuisines</h4>
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
+          <h4 className="mb-4 dark:text-white">Top Cuisines</h4>
           <div className="space-y-3">
             {[
               { cuisine: 'Italian', percentage: 28 },
@@ -203,10 +203,10 @@ export function PlatformAnalytics() {
             ].map((item) => (
               <div key={item.cuisine}>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-gray-700">{item.cuisine}</span>
-                  <span className="text-gray-600">{item.percentage}%</span>
+                  <span className="text-gray-700 dark:text-gray-300">{item.cuisine}</span>
+                  <span className="text-gray-600 dark:text-gray-400">{item.percentage}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-200 dark:bg-[#3a3a3a] rounded-full h-2">
                   <div 
                     className="bg-blue-600 h-2 rounded-full"
                     style={{ width: `${item.percentage}%` }}
@@ -219,32 +219,32 @@ export function PlatformAnalytics() {
       </div>
 
       {/* Additional Metrics */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h3 className="mb-6">Key Performance Indicators</h3>
+      <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
+        <h3 className="mb-6 dark:text-white">Key Performance Indicators</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
           <div className="text-center">
-            <p className="text-gray-600 mb-2">Avg. Booking Value</p>
-            <p className="text-blue-600">$16.89</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-2">Avg. Booking Value</p>
+            <p className="text-blue-600 dark:text-blue-400">$16.89</p>
           </div>
           <div className="text-center">
-            <p className="text-gray-600 mb-2">Platform Fee</p>
-            <p className="text-green-600">8.5%</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-2">Platform Fee</p>
+            <p className="text-green-600 dark:text-green-400">8.5%</p>
           </div>
           <div className="text-center">
-            <p className="text-gray-600 mb-2">Cancellation Rate</p>
-            <p className="text-yellow-600">6.2%</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-2">Cancellation Rate</p>
+            <p className="text-yellow-600 dark:text-yellow-400">6.2%</p>
           </div>
           <div className="text-center">
-            <p className="text-gray-600 mb-2">User Retention</p>
-            <p className="text-purple-600">78%</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-2">User Retention</p>
+            <p className="text-purple-600 dark:text-purple-400">78%</p>
           </div>
           <div className="text-center">
-            <p className="text-gray-600 mb-2">Avg. Rating</p>
-            <p className="text-orange-600">4.6/5.0</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-2">Avg. Rating</p>
+            <p className="text-orange-600 dark:text-orange-400">4.6/5.0</p>
           </div>
           <div className="text-center">
-            <p className="text-gray-600 mb-2">Monthly Growth</p>
-            <p className="text-green-600">+18%</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-2">Monthly Growth</p>
+            <p className="text-green-600 dark:text-green-400">+18%</p>
           </div>
         </div>
       </div>

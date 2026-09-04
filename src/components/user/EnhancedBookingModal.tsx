@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { X, Calendar, Users, Clock, CheckCircle2, XCircle, Filter, Grid3x3, List, Eye, Coffee, Sun, Sunset, Moon, Utensils } from 'lucide-react';
 import { Restaurant, Booking } from '../../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { AnimatedButton, AnimatedIconButton } from '../ui/animated-button';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Calendar as HeroCalendar } from "@heroui/react";
+import { today, getLocalTimeZone, CalendarDate } from "@internationalized/date";
 
 interface EnhancedBookingModalProps {
   restaurant: Restaurant;
@@ -27,7 +30,7 @@ interface TimeSlot {
 type MealType = 'breakfast' | 'lunch' | 'dinner' | 'brunch' | 'snacks';
 
 export function EnhancedBookingModal({ restaurant, onClose, onComplete }: EnhancedBookingModalProps) {
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(null);
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedTableType, setSelectedTableType] = useState<2 | 3 | 4 | null>(null);
   const [isWindowSide, setIsWindowSide] = useState(false);
@@ -35,6 +38,12 @@ export function EnhancedBookingModal({ restaurant, onClose, onComplete }: Enhanc
   const [viewMode, setViewMode] = useState<'time' | 'table'>('time');
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState<MealType>('lunch');
+
+  const todayDate = useMemo(() => today(getLocalTimeZone()), []);
+  const selectedDateIso = selectedDate ? selectedDate.toString() : '';
+  const selectedDateLabel = selectedDate
+    ? new Intl.DateTimeFormat(undefined, { year: 'numeric', month: 'short', day: '2-digit' }).format(selectedDate.toDate(getLocalTimeZone()))
+    : 'Pick a date';
 
   const mealTypes: { type: MealType; label: string; icon: any; timeRange: string; color: string }[] = [
     { type: 'breakfast', label: 'Breakfast', icon: Coffee, timeRange: '6AM - 11AM', color: 'from-orange-400 to-amber-500' },
@@ -87,14 +96,14 @@ export function EnhancedBookingModal({ restaurant, onClose, onComplete }: Enhanc
   };
 
   const handleConfirm = () => {
-    if (!selectedDate || !selectedTime || !selectedTableType) return;
+    if (!selectedDateIso || !selectedTime || !selectedTableType) return;
 
     const booking: Booking = {
       id: `b${Date.now()}`,
       restaurantId: restaurant.id,
       restaurantName: restaurant.name,
       userId: 'u1',
-      date: selectedDate,
+      date: selectedDateIso,
       time: selectedTime,
       duration: 1.5,
       tableType: selectedTableType,
@@ -132,12 +141,13 @@ export function EnhancedBookingModal({ restaurant, onClose, onComplete }: Enhanc
               <h2 className="mb-1">Book Your Perfect Table</h2>
               <p className="opacity-90">{restaurant.name}</p>
             </div>
-            <button 
-              onClick={onClose} 
-              className="p-2 hover:bg-black/10 rounded-full transition-all"
+            <AnimatedIconButton
+              onClick={onClose}
+              className="p-2 hover:bg-black/10 rounded-full transition-all text-[#0f0f0f]"
+              aria-label="Close booking modal"
             >
               <X className="w-6 h-6" />
-            </button>
+            </AnimatedIconButton>
           </div>
         </div>
 
@@ -150,13 +160,45 @@ export function EnhancedBookingModal({ restaurant, onClose, onComplete }: Enhanc
                   <Calendar className="w-5 h-5 text-[#d4af37]" />
                   Select Date
                 </label>
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="w-full px-4 py-3 bg-[#1a1a1a] border border-[#3a3a3a] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50 focus:border-transparent transition-all"
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <AnimatedButton
+                      type="button"
+                      variant="secondary"
+                      size="md"
+                      className="w-full justify-start px-4 py-3 bg-[#1a1a1a] border border-[#3a3a3a] rounded-xl text-white hover:bg-[#1a1a1a] hover:border-[#d4af37]/40"
+                      icon={<Calendar className="w-5 h-5 text-[#d4af37]" />}
+                      aria-label="Select reservation date"
+                    >
+                      <span className={selectedDate ? 'text-white' : 'text-gray-400'}>
+                        {selectedDateLabel}
+                      </span>
+                    </AnimatedButton>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    align="start"
+                    className="w-auto p-0 bg-[#1a1a1a] border border-[#3a3a3a] rounded-2xl overflow-hidden"
+                  >
+                    <HeroCalendar
+                      value={selectedDate}
+                      onChange={setSelectedDate}
+                      minValue={todayDate}
+                      className="bg-[#1a1a1a] text-white p-2"
+                      classNames={{
+                        base: "bg-[#1a1a1a] shadow-none border-none",
+                        header: "bg-[#1a1a1a] border-b border-[#3a3a3a]",
+                        headerWrapper: "text-white",
+                        title: "text-white font-semibold",
+                        prevButton: "text-white hover:bg-[#2a2a2a] rounded-lg",
+                        nextButton: "text-white hover:bg-[#2a2a2a] rounded-lg",
+                        gridHeader: "bg-[#1a1a1a] text-gray-400 font-medium",
+                        gridBody: "bg-[#1a1a1a]",
+                        cell: "text-white hover:bg-[#2a2a2a] rounded-lg transition-colors",
+                        cellButton: "data-[selected=true]:bg-[#d4af37] data-[selected=true]:text-[#0f0f0f] data-[today=true]:text-[#d4af37] data-[disabled=true]:text-gray-600 data-[hover=true]:bg-[#2a2a2a]",
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
 
               <div>
@@ -489,18 +531,20 @@ export function EnhancedBookingModal({ restaurant, onClose, onComplete }: Enhanc
             {selectedTime && selectedTableType && (
               <div className="text-white">
                 <p className="text-gray-400">Selected:</p>
-                <p className="font-medium">{selectedDate} at {selectedTime} • {selectedTableType}-Seat Table</p>
+                <p className="font-medium">{selectedDateIso} at {selectedTime} • {selectedTableType}-Seat Table</p>
                 {isWindowSide && <p className="text-sm text-gray-300">Window Side</p>}
               </div>
             )}
           </div>
-          <button
+          <AnimatedButton
             onClick={handleConfirm}
-            disabled={!selectedDate || !selectedTime || !selectedTableType}
-            className="px-8 py-3 bg-gradient-to-r from-[#d4af37] to-[#b8860b] text-[#0f0f0f] rounded-xl hover:shadow-lg hover:shadow-[#d4af37]/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            disabled={!selectedDateIso || !selectedTime || !selectedTableType}
+            variant="primary"
+            size="md"
+            className="px-8 py-3 rounded-xl hover:shadow-lg hover:shadow-[#d4af37]/30"
           >
             Confirm Booking
-          </button>
+          </AnimatedButton>
         </div>
       </div>
     </div>

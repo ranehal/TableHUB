@@ -1,9 +1,21 @@
 import { MapPin } from 'lucide-react';
+import { cn } from "@/lib/utils";
+import { FlickeringGrid } from "@/registry/magicui/flickering-grid";
 
 export function Footer() {
   return (
-    <footer className="bg-[#1a1a1a] border-t border-[#d4af37]/20 mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <footer className="relative overflow-hidden bg-black border-t border-[#d4af37]/20 mt-20 z-20">
+      <div className="absolute inset-0 z-0">
+        <FlickeringGrid
+          className="w-full h-full"
+          squareSize={4}
+          gridGap={6}
+          color="#8a6d25"
+          maxOpacity={0.2}
+          flickerChance={0.1}
+        />
+      </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand Section */}
           <div>

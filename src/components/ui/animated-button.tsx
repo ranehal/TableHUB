@@ -1,27 +1,31 @@
 import { motion } from 'motion/react';
-import { ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, MouseEventHandler, ReactNode } from 'react';
+import { forwardRef } from 'react';
 
-interface AnimatedButtonProps {
+type MotionButtonProps = ComponentPropsWithoutRef<typeof motion.button>;
+
+interface AnimatedButtonProps extends Omit<MotionButtonProps, 'children' | 'className'> {
   children: ReactNode;
-  onClick?: () => void;
   className?: string;
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
-  disabled?: boolean;
-  type?: 'button' | 'submit' | 'reset';
   icon?: ReactNode;
 }
 
-export function AnimatedButton({
-  children,
-  onClick,
-  className = '',
-  variant = 'primary',
-  size = 'md',
-  disabled = false,
-  type = 'button',
-  icon,
-}: AnimatedButtonProps) {
+export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(function AnimatedButton(
+  {
+    children,
+    onClick,
+    className = '',
+    variant = 'primary',
+    size = 'md',
+    disabled = false,
+    type = 'button',
+    icon,
+    ...props
+  },
+  ref,
+) {
   const baseClasses = 'relative overflow-hidden font-medium rounded-xl transition-all duration-300 flex items-center justify-center gap-2';
   
   const variantClasses = {
@@ -40,19 +44,24 @@ export function AnimatedButton({
   
   const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer';
 
+  const handleClick: MouseEventHandler<HTMLButtonElement> | undefined =
+    disabled ? undefined : onClick;
+
   return (
     <motion.button
+      ref={ref}
       type={type}
-      onClick={!disabled ? onClick : undefined}
+      onClick={handleClick}
       className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className}`}
       whileHover={!disabled ? { scale: 1.05, y: -2 } : {}}
       whileTap={!disabled ? { scale: 0.98, y: 0 } : {}}
       transition={{ type: 'spring', stiffness: 400, damping: 17 }}
       disabled={disabled}
+      {...props}
     >
       {/* Shine effect on hover */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
         initial={{ x: '-100%' }}
         whileHover={{ x: '100%' }}
         transition={{ duration: 0.6 }}
@@ -65,16 +74,24 @@ export function AnimatedButton({
       </span>
     </motion.button>
   );
-}
+});
 
 // Icon Button variant
-export function AnimatedIconButton({
-  children,
-  onClick,
-  className = '',
-  variant = 'ghost',
-  disabled = false,
-}: Omit<AnimatedButtonProps, 'size'>) {
+export const AnimatedIconButton = forwardRef<
+  HTMLButtonElement,
+  Omit<AnimatedButtonProps, 'size'>
+>(function AnimatedIconButton(
+  {
+    children,
+    onClick,
+    className = '',
+    variant = 'ghost',
+    disabled = false,
+    type = 'button',
+    ...props
+  },
+  ref,
+) {
   const variantClasses = {
     primary: 'bg-gradient-to-r from-[#d4af37] to-[#b8860b] text-[#0f0f0f]',
     secondary: 'bg-[#2a2a2a] text-white border border-[#3a3a3a]',
@@ -83,40 +100,55 @@ export function AnimatedIconButton({
     danger: 'bg-red-600 text-white',
   };
 
+  const handleClick: MouseEventHandler<HTMLButtonElement> | undefined =
+    disabled ? undefined : onClick;
+
   return (
     <motion.button
-      onClick={!disabled ? onClick : undefined}
+      ref={ref}
+      type={type}
+      onClick={handleClick}
       className={`p-2 rounded-lg transition-all ${variantClasses[variant]} ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
       whileHover={!disabled ? { scale: 1.1, rotate: 5 } : {}}
       whileTap={!disabled ? { scale: 0.9, rotate: 0 } : {}}
       transition={{ type: 'spring', stiffness: 400, damping: 17 }}
       disabled={disabled}
+      {...props}
     >
       {children}
     </motion.button>
   );
-}
+});
 
 // Floating Action Button
-export function FloatingActionButton({
-  children,
-  onClick,
-  className = '',
-}: Omit<AnimatedButtonProps, 'variant' | 'size'>) {
+export const FloatingActionButton = forwardRef<
+  HTMLButtonElement,
+  Omit<AnimatedButtonProps, 'variant' | 'size'>
+>(function FloatingActionButton(
+  { children, onClick, className = '', type = 'button', disabled, ...props },
+  ref,
+) {
+  const handleClick: MouseEventHandler<HTMLButtonElement> | undefined =
+    disabled ? undefined : onClick;
+
   return (
     <motion.button
-      onClick={onClick}
+      ref={ref}
+      type={type}
+      onClick={handleClick}
       className={`fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-r from-[#d4af37] to-[#b8860b] text-[#0f0f0f] rounded-full shadow-2xl shadow-[#d4af37]/40 flex items-center justify-center ${className}`}
-      whileHover={{ scale: 1.1, rotate: 90 }}
-      whileTap={{ scale: 0.9 }}
+      whileHover={!disabled ? { scale: 1.1, rotate: 90 } : {}}
+      whileTap={!disabled ? { scale: 0.9 } : {}}
       initial={{ scale: 0, rotate: -180 }}
       animate={{ scale: 1, rotate: 0 }}
       transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+      disabled={disabled}
+      {...props}
     >
       {children}
     </motion.button>
   );
-}
+});
 
 // Pulse Button (for notifications, etc.)
 export function PulseButton({
@@ -124,13 +156,22 @@ export function PulseButton({
   onClick,
   className = '',
   pulseCount = 0,
+  type = 'button',
+  disabled,
+  ...props
 }: AnimatedButtonProps & { pulseCount?: number }) {
+  const handleClick: MouseEventHandler<HTMLButtonElement> | undefined =
+    disabled ? undefined : onClick;
+
   return (
     <motion.button
-      onClick={onClick}
-      className={`relative p-2 rounded-lg bg-transparent text-gray-400 hover:text-white hover:bg-[#2a2a2a] transition-all ${className}`}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
+      type={type}
+      onClick={handleClick}
+      className={`relative p-2 rounded-lg bg-transparent text-gray-400 hover:text-white hover:bg-[#2a2a2a] transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+      whileHover={!disabled ? { scale: 1.1 } : {}}
+      whileTap={!disabled ? { scale: 0.9 } : {}}
+      disabled={disabled}
+      {...props}
     >
       {children}
       

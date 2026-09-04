@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Lock, User, Phone, Chrome } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
+import { MagicCard } from "@/registry/magicui/magic-card";
 
 interface AuthModalProps {
   onClose: () => void;
@@ -68,18 +69,23 @@ export function AuthModal({ onClose, onAuthSuccess }: AuthModalProps) {
       onClick={onClose}
     >
       <motion.div 
-        className="bg-[#1a1a1a] backdrop-blur-xl rounded-2xl max-w-md w-full shadow-2xl border border-[#d4af37]/20"
+        className="max-w-md w-full"
         initial={{ scale: 0.8, opacity: 0, y: 50 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.8, opacity: 0, y: 50 }}
         transition={{ type: "spring", duration: 0.5 }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="relative px-8 pt-8 pb-6">
+        <MagicCard 
+          className="bg-black/40 backdrop-blur-2xl border border-white/10 shadow-2xl"
+          gradientColor="#d4af37"
+          gradientOpacity={0.15}
+        >
+          {/* Header */}
+          <div className="relative px-8 pt-8 pb-6">
           <motion.button 
             onClick={onClose} 
-            className="absolute top-6 right-6 p-2 hover:bg-[#2a2a2a] rounded-full transition-all text-gray-400 hover:text-[#d4af37]"
+            className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-all text-gray-400 hover:text-[#d4af37]"
             whileHover={{ scale: 1.1, rotate: 90 }}
             whileTap={{ scale: 0.9 }}
           >
@@ -122,7 +128,7 @@ export function AuthModal({ onClose, onAuthSuccess }: AuthModalProps) {
           {/* Auth Mode Tabs */}
           {mode !== 'otp' && (
             <motion.div 
-              className="flex gap-2 bg-[#0f0f0f] rounded-xl p-1 mb-6"
+              className="flex gap-2 bg-black/20 rounded-xl p-1 mb-6"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
@@ -132,7 +138,7 @@ export function AuthModal({ onClose, onAuthSuccess }: AuthModalProps) {
                 className={`flex-1 py-2.5 rounded-lg transition-all font-medium ${
                   mode === 'login'
                     ? 'bg-gradient-to-r from-[#d4af37] to-[#b8860b] text-[#0f0f0f] shadow-sm'
-                    : 'text-gray-400 hover:text-white'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
                 whileHover={{ scale: mode !== 'login' ? 1.02 : 1 }}
                 whileTap={{ scale: 0.98 }}
@@ -144,7 +150,7 @@ export function AuthModal({ onClose, onAuthSuccess }: AuthModalProps) {
                 className={`flex-1 py-2.5 rounded-lg transition-all font-medium ${
                   mode === 'signup'
                     ? 'bg-gradient-to-r from-[#d4af37] to-[#b8860b] text-[#0f0f0f] shadow-sm'
-                    : 'text-gray-400 hover:text-white'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
                 whileHover={{ scale: mode !== 'signup' ? 1.02 : 1 }}
                 whileTap={{ scale: 0.98 }}
@@ -167,17 +173,17 @@ export function AuthModal({ onClose, onAuthSuccess }: AuthModalProps) {
                 transition={{ duration: 0.3 }}
               >
                 <div>
-                  <label className="block text-gray-300 mb-2">Enter OTP</label>
+                  <label className="block text-gray-300 mb-2 text-sm font-medium">Enter OTP</label>
                   <div className="relative">
                     <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#d4af37] w-5 h-5" />
-                    <motion.input
+                    <input
                       type="text"
                       placeholder="123456"
                       value={formData.otp}
                       onChange={(e) => setFormData({ ...formData, otp: e.target.value })}
-                      className="w-full pl-12 pr-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50 focus:border-transparent transition-all"
+                      className="w-full pl-12 pr-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50 focus:border-transparent transition-all"
                       required
-                      whileFocus={{ scale: 1.02 }}
+                      autoComplete="one-time-code"
                     />
                   </div>
                 </div>
@@ -217,50 +223,50 @@ export function AuthModal({ onClose, onAuthSuccess }: AuthModalProps) {
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                     >
-                      <label className="block text-gray-300 mb-2">Full Name</label>
+                      <label className="block text-gray-300 mb-2 text-sm font-medium">Full Name</label>
                       <div className="relative">
                         <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#d4af37] w-5 h-5" />
-                        <motion.input
+                        <input
                           type="text"
                           placeholder="John Doe"
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="w-full pl-12 pr-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50 focus:border-transparent transition-all"
+                          className="w-full pl-12 pr-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50 focus:border-transparent transition-all"
                           required
-                          whileFocus={{ scale: 1.02 }}
+                          autoComplete="name"
                         />
                       </div>
                     </motion.div>
                   )}
 
                   <div>
-                    <label className="block text-gray-300 mb-2">Email</label>
+                    <label className="block text-gray-300 mb-2 text-sm font-medium">Email</label>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#d4af37] w-5 h-5" />
-                      <motion.input
+                      <input
                         type="email"
                         placeholder="you@example.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full pl-12 pr-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50 focus:border-transparent transition-all"
+                        className="w-full pl-12 pr-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50 focus:border-transparent transition-all"
                         required
-                        whileFocus={{ scale: 1.02 }}
+                        autoComplete="email"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-gray-300 mb-2">Password</label>
+                    <label className="block text-gray-300 mb-2 text-sm font-medium">Password</label>
                     <div className="relative">
                       <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#d4af37] w-5 h-5" />
-                      <motion.input
+                      <input
                         type="password"
                         placeholder="••••••••"
                         value={formData.password}
                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        className="w-full pl-12 pr-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50 focus:border-transparent transition-all"
+                        className="w-full pl-12 pr-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50 focus:border-transparent transition-all"
                         required
-                        whileFocus={{ scale: 1.02 }}
+                        autoComplete={mode === 'signup' ? "new-password" : "current-password"}
                       />
                     </div>
                   </div>
@@ -342,6 +348,7 @@ export function AuthModal({ onClose, onAuthSuccess }: AuthModalProps) {
             </motion.button>
           </p>
         </div>
+        </MagicCard>
       </motion.div>
     </motion.div>
   );

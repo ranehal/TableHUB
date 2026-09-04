@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { X, Calendar, Clock, Users, Timer, DollarSign, AlertCircle } from 'lucide-react';
+import { X, Calendar as LucideCalendar, Clock, Users, Timer, DollarSign, AlertCircle } from 'lucide-react';
 import { Restaurant, Booking } from '../../types';
+import { Calendar } from "@heroui/react";
+import { parseDate, getLocalTimeZone, today } from "@internationalized/date";
 
 interface BookingModalProps {
   restaurant: Restaurant;
@@ -106,16 +108,21 @@ export function BookingModal({ restaurant, onClose, onComplete }: BookingModalPr
           {step === 1 && (
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <Calendar className="w-6 h-6 text-blue-600" />
+                <LucideCalendar className="w-6 h-6 text-blue-600" />
                 <h3>Choose Date</h3>
               </div>
-              <input
-                type="date"
-                value={bookingData.date}
-                onChange={(e) => setBookingData({ ...bookingData, date: e.target.value })}
-                min={new Date().toISOString().split('T')[0]}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <div className="flex justify-center bg-gray-50 rounded-xl p-4 border border-gray-200">
+                <Calendar 
+                  aria-label="Select Date"
+                  value={bookingData.date ? parseDate(bookingData.date) : undefined}
+                  onChange={(date) => setBookingData({ ...bookingData, date: date.toString() })}
+                  minValue={today(getLocalTimeZone())}
+                  className="max-w-full"
+                />
+              </div>
+              {!bookingData.date && (
+                <p className="text-sm text-red-500 mt-2 text-center">Please select a date to continue</p>
+              )}
             </div>
           )}
 

@@ -7,6 +7,18 @@ import { UserView } from './UserPortal';
 import { Footer } from './Footer';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { ErrorBoundary } from '../ui/ErrorBoundary';
+import { ShinyButton } from "@/components/ui/shiny-button";
+import { RainbowButton } from "@/components/ui/rainbow-button";
+import { TextReveal } from "@/registry/magicui/text-reveal";
+import { AnimatedGradientText } from "@/registry/magicui/animated-gradient-text";
+import { TextAnimate } from "@/registry/magicui/text-animate";
+import { ScratchToReveal } from "@/components/magicui/scratch-to-reveal";
+import { Marquee } from "@/registry/magicui/marquee";
+import { cn } from "@/lib/utils";
+import { AnimatedButton, AnimatedIconButton } from '../ui/animated-button';
+import { ImagesSlider } from "../ui/images-slider";
+import IconCloud from "@/components/magicui/icon-cloud";
+import { SnowParticles } from "@/components/ui/snow-particles";
 
 interface UserHomeProps {
   onSearch: (query: string) => void;
@@ -27,7 +39,11 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
   useEffect(() => {
     if (canvasRef.current) {
       const app = new Application(canvasRef.current);
-      app.load('https://prod.spline.design/TS91-wcgqLHYx5Nd/scene.splinecode');
+      // Prefer Spline community file URL as requested by user
+      app.load('https://app.spline.design/community/file/cef26586-3853-44bb-b42b-cc462e774e8b').catch(() => {
+        // Fallback to prod scene if community endpoint requires export scene
+        app.load('https://prod.spline.design/TS91-wcgqLHYx5Nd/scene.splinecode').catch(console.error);
+      });
     }
   }, []);
   
@@ -70,48 +86,10 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
   const y1 = useTransform(scrollY, [0, 100], [0, -100]);
   const y2 = useTransform(scrollY, [0, 100], [0, -50]);
 
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const updateMousePosition = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener("mousemove", updateMousePosition);
-
-    return () => {
-      window.removeEventListener("mousemove", updateMousePosition);
-    };
-  }, []);
-
   return (
-    <div className="min-h-screen bg-[#0f0f0f] cursor-none">
-      <motion.div
-        className="fixed top-0 left-0 w-8 h-8 border-2 border-[#d4af37] rounded-full pointer-events-none z-50 mix-blend-difference"
-        animate={{
-          x: mousePosition.x - 16,
-          y: mousePosition.y - 16,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 500,
-          damping: 28,
-          mass: 0.5,
-        }}
-      />
-      <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-[#d4af37] rounded-full pointer-events-none z-50"
-        animate={{
-          x: mousePosition.x - 4,
-          y: mousePosition.y - 4,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 800,
-          damping: 35,
-          mass: 0.5,
-        }}
-      />
+    <div className="min-h-screen bg-[#0f0f0f] relative">
+      <SnowParticles quantity={50} size={3.0} color="#ffffff" className="z-0" />
+      
       {/* Header */}
       <header className="bg-[#1a1a1a]/70 backdrop-blur-xl shadow-lg sticky top-0 z-40 border-b border-[#d4af37]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
@@ -174,127 +152,138 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
 
             {/* Navigation Buttons */}
             <div className="hidden lg:flex items-center gap-1.5">
-              <button 
+              <ShinyButton
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-[#d4af37]/20"
+                className="group/shiny px-4 py-2 text-sm flex items-center gap-2 bg-transparent border border-[#d4af37]/30 text-white hover:border-[#d4af37]/60 transition-all"
                 title="Home"
               >
                 <Home className="w-4 h-4 text-[#d4af37]" />
-                <span className="text-gray-300 text-sm">Home</span>
-              </button>
+                <span>Home</span>
+              </ShinyButton>
               
-              <button 
-                onClick={() => onSearch('all')}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-[#d4af37]/20"
+              <ShinyButton
+                onClick={() => {
+                  document.getElementById('featured-restaurants')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+                className="group/shiny px-4 py-2 text-sm flex items-center gap-2 bg-transparent border border-[#d4af37]/30 text-white hover:border-[#d4af37]/60 transition-all"
                 title="Explore Restaurants"
               >
                 <Compass className="w-4 h-4 text-[#d4af37]" />
-                <span className="text-gray-300 text-sm">Explore</span>
-              </button>
+                <span>Explore</span>
+              </ShinyButton>
               
-              <button 
+              <ShinyButton
                 onClick={() => setShowOffers(true)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-[#d4af37]/20"
+                className="group/shiny px-4 py-2 text-sm flex items-center gap-2 bg-transparent border border-[#d4af37]/30 text-white hover:border-[#d4af37]/60 transition-all"
                 title="Offers & Deals"
               >
                 <Tag className="w-4 h-4 text-[#d4af37]" />
-                <span className="text-gray-300 text-sm">Offers</span>
-              </button>
+                <span>Offers</span>
+              </ShinyButton>
               
-              <button 
+              <ShinyButton
                 onClick={() => onNavigate('home')}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-[#d4af37]/20"
+                className="group/shiny px-4 py-2 text-sm flex items-center gap-2 bg-transparent border border-[#d4af37]/30 text-white hover:border-[#d4af37]/60 transition-all"
                 title="Favorites"
               >
                 <Heart className="w-4 h-4 text-[#d4af37]" />
-                <span className="text-gray-300 text-sm">Favorites</span>
-              </button>
+                <span>Favorites</span>
+              </ShinyButton>
             </div>
 
             {/* Right Side Buttons */}
             <div className="flex items-center gap-1.5">
               {/* Notifications */}
-              <div className="relative">
-                <button 
-                  onClick={() => setShowNotifications(!showNotifications)}
-                  className="relative p-2 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-[#d4af37]/20"
-                  title="Notifications"
-                >
-                  <Bell className="w-4 h-4 text-[#d4af37]" />
-                  {notifications.filter(n => n.unread).length > 0 && (
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                  )}
-                </button>
+              {isAuthenticated && (
+                <div className="relative">
+                  <AnimatedIconButton
+                    onClick={() => setShowNotifications(!showNotifications)}
+                    className="relative hover:bg-white/5 border border-[#d4af37]/20"
+                    title="Notifications"
+                  >
+                    <Bell className="w-4 h-4 text-[#d4af37]" />
+                    {notifications.filter(n => n.unread).length > 0 && (
+                      <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    )}
+                  </AnimatedIconButton>
 
-                {/* Notifications Dropdown */}
-                {showNotifications && (
-                  <div className="absolute right-0 mt-2 w-80 bg-[#1a1a1a]/95 backdrop-blur-xl border border-[#2a2a2a] rounded-xl shadow-2xl z-50">
-                    <div className="p-4 border-b border-[#2a2a2a] flex items-center justify-between">
-                      <h3 className="text-white">Notifications</h3>
-                      <button 
-                        onClick={() => setShowNotifications(false)}
-                        className="text-gray-500 hover:text-gray-300"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="max-h-96 overflow-y-auto">
-                      {notifications.map((notif) => (
-                        <div 
-                          key={notif.id}
-                          className={`p-4 border-b border-[#2a2a2a] hover:bg-white/5 transition-all cursor-pointer ${
-                            notif.unread ? 'bg-[#d4af37]/5' : ''
-                          }`}
+                  {/* Notifications Dropdown */}
+                  {showNotifications && (
+                    <div className="absolute right-0 mt-2 w-80 bg-[#1a1a1a]/95 backdrop-blur-xl border border-[#2a2a2a] rounded-xl shadow-2xl z-50">
+                      <div className="p-4 border-b border-[#2a2a2a] flex items-center justify-between">
+                        <h3 className="text-white">Notifications</h3>
+                        <AnimatedIconButton
+                          onClick={() => setShowNotifications(false)}
+                          className="text-gray-500 hover:text-gray-300"
+                          aria-label="Close notifications"
                         >
-                          <div className="flex items-start justify-between mb-1">
-                            <p className="text-white text-sm">{notif.title}</p>
-                            {notif.unread && <span className="w-2 h-2 bg-[#d4af37] rounded-full mt-1"></span>}
+                          <X className="w-4 h-4" />
+                        </AnimatedIconButton>
+                      </div>
+                      <div className="max-h-96 overflow-y-auto">
+                        {notifications.map((notif) => (
+                          <div 
+                            key={notif.id}
+                            className={`p-4 border-b border-[#2a2a2a] hover:bg-white/5 transition-all cursor-pointer ${
+                              notif.unread ? 'bg-[#d4af37]/5' : ''
+                            }`}
+                          >
+                            <div className="flex items-start justify-between mb-1">
+                              <p className="text-white text-sm">{notif.title}</p>
+                              {notif.unread && <span className="w-2 h-2 bg-[#d4af37] rounded-full mt-1"></span>}
+                            </div>
+                            <p className="text-gray-400 text-sm mb-1">{notif.message}</p>
+                            <p className="text-gray-600 text-xs">{notif.time}</p>
                           </div>
-                          <p className="text-gray-400 text-sm mb-1">{notif.message}</p>
-                          <p className="text-gray-600 text-xs">{notif.time}</p>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
+                      <div className="p-3 text-center border-t border-[#2a2a2a]">
+                        <AnimatedButton
+                          variant="ghost"
+                          size="sm"
+                          className="w-full text-[#d4af37] hover:text-[#f4d03f] hover:bg-transparent"
+                        >
+                          View All Notifications
+                        </AnimatedButton>
+                      </div>
                     </div>
-                    <div className="p-3 text-center border-t border-[#2a2a2a]">
-                      <button className="text-[#d4af37] text-sm hover:text-[#f4d03f]">View All Notifications</button>
-                    </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
 
               {/* Help Button */}
-              <button 
+              <AnimatedIconButton
                 onClick={() => setShowHelp(true)}
-                className="p-2 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-[#d4af37]/20"
+                className="hover:bg-white/5 border border-[#d4af37]/20"
                 title="Help & Support"
               >
                 <HelpCircle className="w-4 h-4 text-[#d4af37]" />
-              </button>
+              </AnimatedIconButton>
 
               {isAuthenticated ? (
                 <>
-                  <button 
+                  <ShinyButton
                     onClick={() => onNavigate('bookings')}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-[#d4af37]/20"
+                    className="px-4 py-2 text-sm flex items-center gap-2 bg-transparent border border-[#d4af37]/30 text-white hover:border-[#d4af37]/60 transition-all"
                   >
                     <History className="w-4 h-4 text-[#d4af37]" />
-                    <span className="hidden sm:inline text-gray-300 text-sm">Bookings</span>
-                  </button>
-                  <button 
+                    <span className="hidden sm:inline">Bookings</span>
+                  </ShinyButton>
+                  <ShinyButton
                     onClick={() => onNavigate('profile')}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-[#d4af37]/20"
+                    className="px-4 py-2 text-sm flex items-center gap-2 bg-transparent border border-[#d4af37]/30 text-white hover:border-[#d4af37]/60 transition-all"
                   >
                     <User className="w-4 h-4 text-[#d4af37]" />
-                    <span className="hidden sm:inline text-gray-300 text-sm">Profile</span>
-                  </button>
+                    <span className="hidden sm:inline">Profile</span>
+                  </ShinyButton>
                 </>
               ) : (
-                <button 
+                <ShinyButton
                   onClick={onAuthClick}
-                  className="px-5 py-1.5 bg-[#d4af37] text-[#0f0f0f] rounded-lg hover:bg-[#b8860b] transition-all text-sm"
+                  className="px-6 py-2 text-sm bg-[#d4af37] text-[#0f0f0f] border border-[#d4af37] hover:bg-[#b8860b] hover:border-[#b8860b] transition-all font-bold"
                 >
                   Sign In
-                </button>
+                </ShinyButton>
               )}
             </div>
           </div>
@@ -307,12 +296,13 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
           <div className="bg-[#1a1a1a] rounded-2xl max-w-2xl w-full border border-[#2a2a2a]">
             <div className="border-b border-[#2a2a2a] px-6 py-4 flex items-center justify-between">
               <h3 className="text-white">Special Offers & Deals</h3>
-              <button 
-                onClick={() => setShowOffers(false)} 
+              <AnimatedIconButton
+                onClick={() => setShowOffers(false)}
                 className="text-gray-500 hover:text-gray-300"
+                aria-label="Close offers"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </AnimatedIconButton>
             </div>
             
             <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
@@ -329,8 +319,22 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
                     <Tag className="w-5 h-5 text-[#d4af37]" />
                   </div>
                   <div className="flex items-center justify-between">
-                    <div className="bg-[#d4af37]/10 border border-[#d4af37]/30 rounded-lg px-4 py-2">
-                      <p className="text-[#d4af37] text-sm">Code: <span className="font-mono">{offer.code}</span></p>
+                    <div className="relative">
+                      <ScratchToReveal
+                        width={160}
+                        height={80}
+                        minScratchPercentage={50}
+                        className="rounded-lg border border-[#d4af37]/30"
+                      >
+                        <div className="h-full w-full rounded-lg bg-[#d4af37]/10 flex items-center justify-center px-3 text-center">
+                          <p className="text-[#d4af37] text-sm leading-snug">
+                            Code: <span className="font-mono break-all">{offer.code}</span>
+                          </p>
+                        </div>
+                      </ScratchToReveal>
+                      <div className="absolute -bottom-5 left-0 right-0 text-center">
+                        <p className="text-[10px] text-gray-500 animate-pulse">Scratch to reveal code</p>
+                      </div>
                     </div>
                     <p className="text-gray-500 text-sm">{offer.expiry}</p>
                   </div>
@@ -347,12 +351,13 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
           <div className="bg-[#1a1a1a] rounded-2xl max-w-2xl w-full border border-[#2a2a2a]">
             <div className="border-b border-[#2a2a2a] px-6 py-4 flex items-center justify-between">
               <h3 className="text-white">Help & Support</h3>
-              <button 
-                onClick={() => setShowHelp(false)} 
+              <AnimatedIconButton
+                onClick={() => setShowHelp(false)}
                 className="text-gray-500 hover:text-gray-300"
+                aria-label="Close help"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </AnimatedIconButton>
             </div>
             
             <div className="p-6 space-y-6">
@@ -393,34 +398,34 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
       )}
 
       {/* Hero Section */}
-      <section 
-        className="relative text-white py-32 px-4 overflow-hidden"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1744776411214-31209006a0f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjByZXN0YXVyYW50JTIwaW50ZXJpb3J8ZW58MXx8fHwxNzYzOTI4NTg0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <div className="absolute inset-0 bg-[#0f0f0f]/90 bg-[rgba(0,0,0,0.46)]"></div>
-        
-        {/* Spline 3D Scene - Moved to grid layout */}
+      <section className="relative text-white py-32 px-4 overflow-hidden min-h-screen z-20">
+        {/* Background Slider */}
+        <div className="absolute inset-0 z-0">
+          <ImagesSlider
+            className="h-full w-full"
+            images={[
+              "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop",
+              "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=2070&auto=format&fit=crop",
+              "https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?q=80&w=2070&auto=format&fit=crop",
+            ]}
+            overlay={true}
+          >
+            <></>
+          </ImagesSlider>
+        </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[500px]">
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto px-4 z-10 w-full">
+          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[900px]">
             
             {/* Left Content */}
             <div className="w-full relative z-20">
               
               {/* Headline */}
               <div className="mb-8">
-                <motion.h1 
-                  className="text-5xl sm:text-6xl lg:text-7xl mb-4 font-bold text-white"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                >
+                <TextAnimate animation="blurInUp" by="character" once className="text-5xl sm:text-6xl lg:text-7xl mb-4 font-bold text-white">
                   Discover Fine Dining Excellence
-                </motion.h1>
+                </TextAnimate>
                 
                 {/* Decorative line */}
                 <motion.div 
@@ -435,39 +440,42 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
                 </motion.div>
               </div>
               
-              <p className="mb-16 text-gray-200 text-xl sm:text-2xl max-w-2xl leading-relaxed">
+              <AnimatedGradientText
+                speed={2}
+                colorFrom="#d4af37"
+                colorTo="#f4d03f"
+                className="mb-16 text-gray-200 text-xl sm:text-2xl max-w-2xl leading-relaxed justify-start p-0 bg-transparent border-none"
+              >
                 Experience world-class restaurants with seamless table reservations and exclusive member benefits
-              </p>
+              </AnimatedGradientText>
               
               {/* Search Bar */}
               <div className="max-w-2xl">
-                {/* Search Mode Toggle */}
-                <div className="flex gap-3 mb-6">
-                  <button
-                    onClick={() => setSearchMode('food')}
-                    className={`px-8 py-3 rounded-lg transition-all ${
-                      searchMode === 'food'
-                        ? 'bg-[#d4af37] text-[#0f0f0f]'
-                        : 'bg-[#1a1a1a] text-gray-300 hover:bg-[#2a2a2a] border border-[#2a2a2a]'
-                    }`}
-                  >
-                    Search by Cuisine
-                  </button>
-                  <button
-                    onClick={() => setSearchMode('restaurant')}
-                    className={`px-8 py-3 rounded-lg transition-all ${
-                      searchMode === 'restaurant'
-                        ? 'bg-[#d4af37] text-[#0f0f0f]'
-                        : 'bg-[#1a1a1a] text-gray-300 hover:bg-[#2a2a2a] border border-[#2a2a2a]'
-                    }`}
-                  >
-                    Search by Restaurant
-                  </button>
+                {/* Stunning Sliding Toggle */}
+                <div className="relative flex bg-[#1a1a1a]/80 backdrop-blur-md p-1.5 rounded-2xl border border-[#d4af37]/20 w-fit mb-8 shadow-2xl">
+                  {['food', 'restaurant'].map((mode) => (
+                    <button
+                      key={mode}
+                      onClick={() => setSearchMode(mode as 'food' | 'restaurant')}
+                      className={`relative z-10 px-8 py-3 rounded-xl text-sm font-bold transition-colors duration-300 ${
+                        searchMode === mode ? 'text-[#0f0f0f]' : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      {searchMode === mode && (
+                        <motion.div
+                          layoutId="searchToggle"
+                          className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#b8860b] shadow-[0_0_20px_rgba(212,175,55,0.3)] -z-10"
+                          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        />
+                      )}
+                      {mode === 'food' ? 'Search by Cuisine' : 'Search by Restaurant'}
+                    </button>
+                  ))}
                 </div>
 
-                <form onSubmit={handleSearchSubmit} className="relative">
-                  <div className="relative bg-[#1a1a1a] rounded-2xl border border-[#d4af37]/20 overflow-hidden">
-                    <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-[#d4af37] w-6 h-6" />
+                <form onSubmit={handleSearchSubmit} className="relative group">
+                  <div className="relative bg-[#1a1a1a]/95 backdrop-blur-xl rounded-3xl border border-[#d4af37]/30 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] transition-all duration-500 group-hover:border-[#d4af37]/60">
+                    <Search className="absolute left-8 top-1/2 transform -translate-y-1/2 text-[#d4af37] w-6 h-6 z-10" />
                     <input
                       type="text"
                       placeholder={searchMode === 'food' 
@@ -475,14 +483,41 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
                         : "Search restaurants by name or cuisine..."}
                       value={searchInput}
                       onChange={(e) => setSearchInput(e.target.value)}
-                      className="w-full pl-16 pr-36 py-6 bg-transparent text-white placeholder-gray-500 focus:outline-none text-lg"
+                      className="w-full pl-20 pr-44 py-8 bg-transparent text-white placeholder-gray-400 focus:outline-none text-xl font-medium relative z-10"
                     />
-                    <button
-                      type="submit"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-[#d4af37] text-[#0f0f0f] px-10 py-3.5 rounded-xl hover:bg-[#b8860b] transition-all hover:shadow-[0_0_20px_rgba(212,175,55,0.6)]"
-                    >
-                      Search
-                    </button>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
+                      <div className="relative group/btn">
+                        {/* Rainbow Glow Layer - Positioned outside the button */}
+                        <motion.div
+                          className="absolute -inset-[3px] rounded-2xl bg-[linear-gradient(90deg,hsl(var(--color-1)),hsl(var(--color-5)),hsl(var(--color-3)),hsl(var(--color-4)),hsl(var(--color-2)))] opacity-70 blur-lg group-hover/btn:opacity-100 transition-opacity duration-500"
+                          animate={{
+                            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                          style={{ backgroundSize: "200% 200%" }}
+                        />
+                        
+                        <button
+                          type="submit"
+                          className="relative px-10 py-4 bg-[#d4af37] text-black rounded-2xl font-bold transition-transform duration-300 hover:scale-105 active:scale-95 shadow-xl"
+                        >
+                          <span className="relative z-10">Search</span>
+                          
+                          {/* Shimmer Effect */}
+                          <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                            <motion.div 
+                              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full"
+                              animate={{ x: ['100%', '-100%'] }}
+                              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                            />
+                          </div>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </form>
 
@@ -491,26 +526,30 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
                   <div className="mt-4 bg-[#1a1a1a] rounded-2xl border border-[#d4af37]/20 overflow-hidden max-h-80 overflow-y-auto">
                     {filteredRestaurants.length > 0 ? (
                       filteredRestaurants.map((restaurant) => (
-                        <button
+                        <AnimatedButton
                           key={restaurant.id}
                           onClick={() => {
                             setSearchInput('');
                             onSelectRestaurant(restaurant);
                           }}
-                          className="w-full px-6 py-5 text-left hover:bg-[#2a2a2a] transition-all border-b border-[#2a2a2a]/50 last:border-0 flex items-center gap-4"
+                          variant="secondary"
+                          size="md"
+                          className="w-full px-6 py-5 text-left justify-between hover:bg-[#2a2a2a] border-b border-[#2a2a2a]/50 last:border-0 flex items-center gap-4"
                         >
-                          <div className="w-14 h-14 bg-[#d4af37]/20 rounded-xl flex items-center justify-center border border-[#d4af37]/20">
-                            <span className="text-2xl">🍽️</span>
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="text-white mb-1">{restaurant.name}</h4>
-                            <p className="text-gray-400">{restaurant.cuisine} • {restaurant.distance} km</p>
+                          <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 bg-[#d4af37]/20 rounded-xl flex items-center justify-center border border-[#d4af37]/20">
+                              <span className="text-2xl">🍽️</span>
+                            </div>
+                            <div>
+                              <h4 className="text-white mb-1">{restaurant.name}</h4>
+                              <p className="text-gray-400">{restaurant.cuisine} • {restaurant.distance} km</p>
+                            </div>
                           </div>
                           <div className="flex items-center gap-1.5 text-[#d4af37]">
                             <Star className="w-4 h-4 fill-[#d4af37]" />
                             <span>{restaurant.rating}</span>
                           </div>
-                        </button>
+                        </AnimatedButton>
                       ))
                     ) : (
                       <div className="px-6 py-12 text-center text-gray-400">
@@ -524,7 +563,7 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
 
 
             {/* Right Side - Spline 3D Scene */}
-            <div className="hidden lg:block h-[600px]">
+            <div className="lg:block h-[800px] w-[800px] lg:translate-x-[300px]">
               <div className="relative w-full h-full rounded-2xl cursor-crosshair hover:cursor-move pointer-events-auto">
                 <ErrorBoundary
                   fallback={
@@ -545,19 +584,21 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Categories */}
         <section className="mb-20">
           <h3 className="mb-10 text-white">Browse by Category</h3>
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
             {categories.map((category) => (
-              <button
+              <AnimatedButton
                 key={category}
                 onClick={() => handleCategoryClick(category)}
-                className="px-10 py-5 bg-[#1a1a1a] rounded-xl border border-[#2a2a2a] hover:border-[#d4af37]/30 hover:bg-[#2a2a2a] transition-all whitespace-nowrap"
+                variant="secondary"
+                size="md"
+                className="px-10 py-5 rounded-xl border border-[#2a2a2a] hover:border-[#d4af37]/30 whitespace-nowrap"
               >
                 <span className="text-gray-300 hover:text-[#d4af37] transition-colors">{category}</span>
-              </button>
+              </AnimatedButton>
             ))}
           </div>
         </section>
@@ -572,12 +613,14 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
               <h3 className="text-white mb-2">Signature Dishes</h3>
               <p className="text-gray-400">Handpicked selections from our finest restaurants</p>
             </div>
-            <button 
+            <AnimatedButton
               onClick={() => onSearch('popular')}
-              className="text-[#d4af37] hover:text-[#f4d03f] px-5 py-2.5 rounded-lg hover:bg-[#2a2a2a] transition-all border border-transparent hover:border-[#d4af37]/20"
+              variant="outline"
+              size="sm"
+              className="px-5 py-2.5 rounded-lg"
             >
               View All →
-            </button>
+            </AnimatedButton>
           </div>
           <motion.div 
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
@@ -635,15 +678,20 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
         </section>
 
         {/* Nearby Restaurants */}
-        <section>
+        <section id="featured-restaurants">
           <div className="flex items-center justify-between mb-10">
             <div>
               <h3 className="text-white mb-2">Featured Restaurants</h3>
               <p className="text-gray-400">Experience exceptional dining at these premier locations</p>
             </div>
-            <button className="text-[#d4af37] hover:text-[#f4d03f] px-5 py-2.5 rounded-lg hover:bg-[#2a2a2a] transition-all border border-transparent hover:border-[#d4af37]/20">
+            <AnimatedButton
+              onClick={() => onSearch('all')}
+              variant="outline"
+              size="sm"
+              className="px-5 py-2.5 rounded-lg"
+            >
               View All →
-            </button>
+            </AnimatedButton>
           </div>
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
@@ -698,15 +746,23 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">{restaurant.cuisine}</span>
-                    <button className="flex items-center gap-2 bg-[#d4af37] text-[#0f0f0f] px-6 py-2.5 rounded-lg hover:bg-[#b8860b] transition-all font-medium hover:shadow-[0_0_15px_rgba(212,175,55,0.5)]">
-                      <Calendar className="w-4 h-4" />
+                    <AnimatedButton
+                      variant="primary"
+                      size="sm"
+                      className="px-6 py-2.5 rounded-lg hover:shadow-[0_0_15px_rgba(212,175,55,0.5)]"
+                      icon={<Calendar className="w-4 h-4" />}
+                    >
                       Reserve
-                    </button>
+                    </AnimatedButton>
                   </div>
                 </div>
               </motion.div>
             ))}
           </motion.div>
+        </section>
+
+        <section className="py-20">
+          <TextReveal text="Crafting unforgettable dining experiences with a touch of magic." />
         </section>
 
         {/* Meet the Team */}
@@ -895,6 +951,68 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
                 <div className="absolute inset-0 -z-10 bg-[#d4af37]/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </motion.div>
             ))}
+          </div>
+        </section>
+
+        {/* Top Restaurants Showcase Section */}
+        <section className="py-16 relative overflow-hidden bg-black/50">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-12">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="text-white mb-4 text-4xl sm:text-5xl font-bold">Our Top Rated Partners</h3>
+                <p className="text-gray-400 text-lg mb-8">
+                  We collaborate with the world's finest dining establishments and brands to bring you an unparalleled culinary experience.
+                </p>
+              </motion.div>
+              
+              <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
+                <IconCloud iconSlugs={[
+                  "foodpanda",
+                  "ubereats",
+                  "kfc",
+                  "pizzahut",
+                  "burgerking",
+                  "dominos",
+                  "subway",
+                  "starbucks",
+                  "pepsi",
+                  "nescafe",
+                  "nestle",
+                  "deliveroo",
+                  "zomato",
+                  "swiggy",
+                  "dunkin",
+                  "taco-bell",
+                  "chipotle",
+                  "mcdonalds",
+                  "popeyes",
+                  "wendys",
+                  "hardees",
+                  "dairyqueen",
+                  "fiveguys",
+                  "pandaexpress",
+                  "cheesecakefactory",
+                  "applebees",
+                  "dennys",
+                  "ihop",
+                  "sonic",
+                  "jackinthebox",
+                  "tacobell",
+                  "pizzahut",
+                  "kfc",
+                  "mcdonalds",
+                  "burgerking",
+                  "subway",
+                  "starbucks",
+                  "dunkin",
+                  "dominos"
+                ]} />
+              </div>
+            </div>
           </div>
         </section>
       </div>

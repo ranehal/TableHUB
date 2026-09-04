@@ -138,8 +138,8 @@ export function TableManagement() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="mb-2">Table & Seat Management</h2>
-          <p className="text-gray-600">Manage your restaurant's seating capacity</p>
+          <h2 className="mb-2 dark:text-white">Table & Seat Management</h2>
+          <p className="text-gray-600 dark:text-gray-400">Manage your restaurant's seating capacity</p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
@@ -152,38 +152,38 @@ export function TableManagement() {
 
       {/* Capacity Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+              <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <p className="text-gray-600">Total Capacity</p>
-              <p className="text-blue-600">{totalCapacity} seats</p>
+              <p className="text-gray-600 dark:text-gray-400">Total Capacity</p>
+              <p className="text-blue-600 dark:text-blue-400">{totalCapacity} seats</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-green-600" />
+            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+              <Users className="w-6 h-6 text-green-600 dark:text-green-400" />
             </div>
             <div>
-              <p className="text-gray-600">Available Seats</p>
-              <p className="text-green-600">{availableSeats} seats</p>
+              <p className="text-gray-600 dark:text-gray-400">Available Seats</p>
+              <p className="text-green-600 dark:text-green-400">{availableSeats} seats</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-red-600" />
+            <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+              <Users className="w-6 h-6 text-red-600 dark:text-red-400" />
             </div>
             <div>
-              <p className="text-gray-600">Occupied Seats</p>
-              <p className="text-red-600">{totalCapacity - availableSeats} seats</p>
+              <p className="text-gray-600 dark:text-gray-400">Occupied Seats</p>
+              <p className="text-red-600 dark:text-red-400">{totalCapacity - availableSeats} seats</p>
             </div>
           </div>
         </div>
@@ -192,7 +192,7 @@ export function TableManagement() {
       {/* Tables Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {tables.map((table) => (
-          <div key={table.id} className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div key={table.id} className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm dark:shadow-none dark:border dark:border-[#2a2a2a] overflow-hidden">
             {/* Table Image */}
             <div className="relative h-48 overflow-hidden">
               <img 
@@ -208,36 +208,36 @@ export function TableManagement() {
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                  <h4 className="mb-2">{table.type}-Seat Tables</h4>
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">{table.description}</p>
-                  <p className="text-gray-600 text-sm">Capacity: {table.type * table.quantity} seats</p>
+                  <h4 className="mb-2 dark:text-white">{table.type}-Seat Tables</h4>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-2">{table.description}</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">Capacity: {table.type * table.quantity} seats</p>
                 </div>
               </div>
 
               <div className="space-y-3 mb-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Total Tables</span>
-                  <span className="text-blue-600">{table.quantity}</span>
+                  <span className="text-gray-700 dark:text-gray-300">Total Tables</span>
+                  <span className="text-blue-600 dark:text-blue-400">{table.quantity}</span>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Available</span>
-                  <span className="text-green-600">{table.available}</span>
+                  <span className="text-gray-700 dark:text-gray-300">Available</span>
+                  <span className="text-green-600 dark:text-green-400">{table.available}</span>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Occupied</span>
-                  <span className="text-red-600">{table.quantity - table.available}</span>
+                  <span className="text-gray-700 dark:text-gray-300">Occupied</span>
+                  <span className="text-red-600 dark:text-red-400">{table.quantity - table.available}</span>
                 </div>
 
-                <div className="pt-3 border-t border-gray-200">
+                <div className="pt-3 border-t border-gray-200 dark:border-[#333]">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-gray-600 text-sm">Occupancy Rate</span>
-                    <span className="text-gray-600 text-sm">
+                    <span className="text-gray-600 dark:text-gray-400 text-sm">Occupancy Rate</span>
+                    <span className="text-gray-600 dark:text-gray-400 text-sm">
                       {Math.round(((table.quantity - table.available) / table.quantity) * 100)}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-200 dark:bg-[#3a3a3a] rounded-full h-2">
                     <div 
                       className="bg-blue-600 h-2 rounded-full transition-all"
                       style={{ 
