@@ -7,91 +7,69 @@ import {
   User as UserIcon, 
   Eye, 
   EyeOff, 
-  Copy, 
-  Check, 
-  HelpCircle, 
+  Lock, 
+  Mail, 
   ArrowLeft, 
   Sparkles, 
   LogIn, 
-  KeyRound, 
-  Lock, 
-  Mail, 
+  HelpCircle, 
+  Copy, 
+  Check, 
   ChevronDown, 
   ChevronUp,
-  Info,
-  CheckCircle2
+  Info
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface DemoRole {
-  role: 'admin' | 'restaurant' | 'user';
-  title: string;
-  badge: string;
+interface RoleHint {
+  key: 'admin' | 'restaurant' | 'user';
+  label: string;
   icon: typeof ShieldCheck;
   id: string;
   pass: string;
-  aliases: string[];
-  passAliases: string[];
-  path: string;
+  shortcut: string;
+  badge: string;
   color: string;
-  borderColor: string;
-  bgGradient: string;
-  badgeBg: string;
-  description: string;
-  capabilities: string[];
+  activeBorder: string;
+  path: string;
 }
 
-const DEMO_ROLES: DemoRole[] = [
+const ROLE_HINTS: RoleHint[] = [
   {
-    role: 'admin',
-    title: 'Super Admin',
-    badge: 'Platform Governance',
+    key: 'admin',
+    label: 'Admin',
     icon: ShieldCheck,
     id: 'admin',
     pass: 'admin123',
-    aliases: ['admin', 'a', 'admin@tablehub.com', 'superadmin'],
-    passAliases: ['admin', 'a', 'admin123', 'adminpass', 'password'],
-    path: '/admin',
+    shortcut: 'a / a',
+    badge: 'Governance',
     color: 'text-amber-400',
-    borderColor: 'border-amber-500/40 hover:border-amber-500',
-    bgGradient: 'from-amber-500/10 via-amber-500/5 to-transparent',
-    badgeBg: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-    description: 'Full administrative control: platform analytics, restaurant onboarding KYC, dispute resolution & audit logs.',
-    capabilities: ['Platform Financial GMV Analytics', 'Restaurant Approval Pipeline', 'Customer Account Governance', 'Escrow Dispute Arbitrator'],
+    activeBorder: 'border-amber-400 bg-amber-400/10 text-amber-300',
+    path: '/admin',
   },
   {
-    role: 'restaurant',
-    title: 'Restaurant Operator',
-    badge: 'Operations & Floorplan',
+    key: 'restaurant',
+    label: 'Manager',
     icon: Store,
     id: 'manager',
     pass: 'manager123',
-    aliases: ['manager', 'm', 'restaurant', 'restaurant@tablehub.com', 'operator'],
-    passAliases: ['manager', 'm', 'restaurant', 'manager123', 'restaurant123', 'password'],
-    path: '/restaurant',
+    shortcut: 'm / m',
+    badge: 'Operations',
     color: 'text-blue-400',
-    borderColor: 'border-blue-500/40 hover:border-blue-500',
-    bgGradient: 'from-blue-500/10 via-blue-500/5 to-transparent',
-    badgeBg: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-    description: 'Venue management: dynamic table layout status, reservation buffers, live queues & culinary menu customization.',
-    capabilities: ['Dynamic Table Allocation Grid', 'Reservation Buffer & Slot Rules', 'Digital Culinary Menu Editor', 'Live Guest Turn & Booking Queue'],
+    activeBorder: 'border-blue-400 bg-blue-400/10 text-blue-300',
+    path: '/restaurant',
   },
   {
-    role: 'user',
-    title: 'Dining Guest',
-    badge: 'Guest Experience',
+    key: 'user',
+    label: 'Guest Diner',
     icon: UserIcon,
     id: 'user',
     pass: 'user123',
-    aliases: ['user', 'u', 'guest', 'user@tablehub.com', 'diner'],
-    passAliases: ['user', 'u', 'user123', 'guest', 'password'],
-    path: '/',
+    shortcut: 'u / u',
+    badge: 'Diner Experience',
     color: 'text-emerald-400',
-    borderColor: 'border-emerald-500/40 hover:border-emerald-500',
-    bgGradient: 'from-emerald-500/10 via-emerald-500/5 to-transparent',
-    badgeBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-    description: 'Guest diner journey: 3D interactive table reservation, venue discovery, multi-rail checkout & digital QR passes.',
-    capabilities: ['Interactive 3D WebGL Table Selector', 'Window & Group Seating Heuristics', 'Multi-Rail Pay (bKash/Nagad/Card)', 'Digital QR Booking Pass Generation'],
+    activeBorder: 'border-emerald-400 bg-emerald-400/10 text-emerald-300',
+    path: '/',
   },
 ];
 
@@ -99,37 +77,28 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedRoleKey, setSelectedRoleKey] = useState<'admin' | 'restaurant' | 'user' | null>(null);
+  const [showCredentialsDrawer, setShowCredentialsDrawer] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [showHelpDetails, setShowHelpDetails] = useState(true);
-  const [selectedRoleTab, setSelectedRoleTab] = useState<'all' | 'admin' | 'restaurant' | 'user'>('all');
+  const [rememberMe, setRememberMe] = useState(true);
 
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
 
+  const handleSelectRoleHint = (hint: RoleHint) => {
+    setSelectedRoleKey(hint.key);
+    setEmail(hint.id);
+    setPassword(hint.pass);
+    setErrorMessage(null);
+    toast.info(`Filled demo credentials for ${hint.label} (${hint.id})`);
+  };
+
   const handleCopy = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
     setCopiedKey(key);
-    toast.success(`Copied "${text}" to clipboard!`);
+    toast.success(`Copied "${text}"`);
     setTimeout(() => setCopiedKey(null), 2000);
-  };
-
-  const handleFillRole = (demo: DemoRole) => {
-    setEmail(demo.id);
-    setPassword(demo.pass);
-    setErrorMessage(null);
-    toast.info(`Filled credentials for ${demo.title}`);
-  };
-
-  const handleQuickLogin = (demo: DemoRole) => {
-    login({
-      id: demo.role === 'admin' ? '1' : demo.role === 'restaurant' ? '2' : '3',
-      name: demo.title,
-      email: `${demo.id}@tablehub.io`,
-      role: demo.role,
-    });
-    toast.success(`Signed in successfully as ${demo.title}!`);
-    navigate(demo.path);
   };
 
   const handleLogin = (e: React.FormEvent) => {
@@ -140,399 +109,326 @@ export default function Login() {
     const cleanPass = password.trim();
 
     if (!cleanEmail || !cleanPass) {
-      setErrorMessage('Please enter both an ID/Email and Password.');
+      setErrorMessage('Please enter your email/ID and password.');
       return;
     }
 
-    // Match Admin
-    const adminConfig = DEMO_ROLES.find(r => r.role === 'admin')!;
-    if (adminConfig.aliases.includes(cleanEmail) && adminConfig.passAliases.includes(cleanPass.toLowerCase())) {
-      login({ id: '1', name: 'Super Admin', email: cleanEmail, role: 'admin' });
-      toast.success('Welcome back, Super Admin!');
-      navigate('/admin');
-      return;
+    // 1. Check Admin
+    if (
+      cleanEmail === 'admin' ||
+      cleanEmail === 'a' ||
+      cleanEmail === 'admin@tablehub.com' ||
+      cleanEmail === 'superadmin'
+    ) {
+      if (['admin', 'admin123', 'a', 'password'].includes(cleanPass.toLowerCase())) {
+        login({ id: '1', name: 'Super Admin', email: cleanEmail, role: 'admin' });
+        toast.success('Welcome back, Super Admin!');
+        navigate('/admin');
+        return;
+      }
     }
 
-    // Match Restaurant
-    const restConfig = DEMO_ROLES.find(r => r.role === 'restaurant')!;
-    if (restConfig.aliases.includes(cleanEmail) && restConfig.passAliases.includes(cleanPass.toLowerCase())) {
-      login({ id: '2', name: 'Restaurant Manager', email: cleanEmail, role: 'restaurant' });
-      toast.success('Welcome back, Restaurant Manager!');
-      navigate('/restaurant');
-      return;
+    // 2. Check Restaurant Operator / Manager
+    if (
+      cleanEmail === 'manager' ||
+      cleanEmail === 'restaurant' ||
+      cleanEmail === 'm' ||
+      cleanEmail === 'manager@tablehub.com' ||
+      cleanEmail === 'restaurant@tablehub.com'
+    ) {
+      if (['manager', 'manager123', 'restaurant', 'restaurant123', 'm', 'password'].includes(cleanPass.toLowerCase())) {
+        login({ id: '2', name: 'Restaurant Manager', email: cleanEmail, role: 'restaurant' });
+        toast.success('Welcome back, Restaurant Manager!');
+        navigate('/restaurant');
+        return;
+      }
     }
 
-    // Match User / Diner
-    const userConfig = DEMO_ROLES.find(r => r.role === 'user')!;
-    if (userConfig.aliases.includes(cleanEmail) && userConfig.passAliases.includes(cleanPass.toLowerCase())) {
-      login({ id: '3', name: 'Dining Guest', email: cleanEmail, role: 'user' });
-      toast.success('Welcome to TableHUB dining experience!');
-      navigate('/');
-      return;
+    // 3. Check Diner / Customer
+    if (
+      cleanEmail === 'user' ||
+      cleanEmail === 'guest' ||
+      cleanEmail === 'u' ||
+      cleanEmail === 'user@tablehub.com' ||
+      cleanEmail === 'diner'
+    ) {
+      if (['user', 'user123', 'u', 'guest', 'password'].includes(cleanPass.toLowerCase())) {
+        login({ id: '3', name: 'Dining Guest', email: cleanEmail, role: 'user' });
+        toast.success('Signed in as Dining Guest!');
+        navigate('/');
+        return;
+      }
     }
 
-    // Fallback: Check if shortcut 'a', 'm', 'u' was used
+    // Fallback shortcuts
     if (cleanEmail === 'a' && cleanPass === 'a') {
-      login({ id: '1', name: 'Super Admin', email: 'admin@tablehub.io', role: 'admin' });
+      login({ id: '1', name: 'Super Admin', email: 'admin@tablehub.com', role: 'admin' });
       navigate('/admin');
       return;
     }
     if (cleanEmail === 'm' && cleanPass === 'm') {
-      login({ id: '2', name: 'Restaurant Manager', email: 'manager@tablehub.io', role: 'restaurant' });
+      login({ id: '2', name: 'Restaurant Manager', email: 'manager@tablehub.com', role: 'restaurant' });
       navigate('/restaurant');
       return;
     }
     if (cleanEmail === 'u' && cleanPass === 'u') {
-      login({ id: '3', name: 'Dining Guest', email: 'user@tablehub.io', role: 'user' });
+      login({ id: '3', name: 'Dining Guest', email: 'user@tablehub.com', role: 'user' });
       navigate('/');
       return;
     }
 
-    setErrorMessage('Invalid credentials. Check the Demo Credentials & Roles Guide below or click any "1-Click Direct Demo Sign In" button.');
+    setErrorMessage('Invalid credentials. Use a role hint above or click "Need credentials help?"');
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-gray-100 flex flex-col justify-between py-8 px-4 sm:px-6 lg:px-8 selection:bg-[#d4af37]/30">
-      {/* Top Header Navigation */}
-      <div className="max-w-6xl w-full mx-auto flex items-center justify-between pb-6 border-b border-white/10">
+    <div className="min-h-screen bg-[#0a0a0a] text-gray-100 flex flex-col justify-between py-6 px-4 sm:px-6 lg:px-8 relative overflow-hidden selection:bg-[#d4af37]/30 selection:text-white">
+      {/* Subtle luxury ambient glows */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-b from-[#d4af37]/10 via-[#d4af37]/5 to-transparent blur-3xl pointer-events-none -z-10" />
+      <div className="absolute bottom-0 right-10 w-96 h-96 bg-[#d4af37]/5 blur-[120px] pointer-events-none -z-10" />
+
+      {/* Top Header Bar */}
+      <header className="max-w-xl w-full mx-auto flex items-center justify-between">
         <Link 
           to="/" 
-          className="flex items-center gap-2 text-gray-400 hover:text-[#d4af37] transition-colors group text-sm font-medium"
+          className="inline-flex items-center gap-2 text-xs sm:text-sm text-gray-400 hover:text-[#d4af37] transition-colors group font-medium"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span>Back to TableHUB Guest View</span>
+          <span>Back to TableHUB</span>
         </Link>
-        
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/30 shadow-sm">
-            <Sparkles className="w-3 h-3 text-[#d4af37] animate-pulse" />
-            Live Demo Mode Active
-          </span>
-        </div>
-      </div>
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/20">
+          <Sparkles className="w-3 h-3 animate-pulse" />
+          Live Demo
+        </span>
+      </header>
 
-      {/* Main Authentication Container */}
-      <div className="max-w-6xl w-full mx-auto my-auto py-8">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-gradient-to-br from-[#d4af37]/20 to-amber-900/20 border border-[#d4af37]/30 mb-4 shadow-lg shadow-[#d4af37]/10">
-            <KeyRound className="w-8 h-8 text-[#d4af37]" />
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Table<span className="text-[#d4af37]">HUB</span> Role-Based Login
-          </h1>
-          <p className="mt-2 text-sm sm:text-base text-gray-400 max-w-2xl mx-auto">
-            Experience TableHUB from 3 distinct vantage points: Super Admin, Restaurant Operator, or Dining Guest. Test instantly using 1-click login or reference the verified credentials below.
-          </p>
-        </div>
+      {/* Real Centered Login Card */}
+      <main className="max-w-md w-full mx-auto my-auto py-6">
+        <div className="relative rounded-3xl bg-[#141414]/95 backdrop-blur-2xl border border-[#d4af37]/20 p-7 sm:p-9 shadow-2xl shadow-black/90">
+          {/* Card Ambient Border Glow */}
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-[#d4af37]/10 via-transparent to-transparent pointer-events-none" />
 
-        {/* 3 Role Quick Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          {DEMO_ROLES.map((demo) => {
-            const Icon = demo.icon;
-            return (
-              <div
-                key={demo.role}
-                className={`relative rounded-2xl bg-gradient-to-b ${demo.bgGradient} bg-[#141414] border ${demo.borderColor} p-6 flex flex-col justify-between transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 group`}
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`p-3 rounded-xl bg-white/5 border border-white/10 ${demo.color}`}>
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${demo.badgeBg}`}>
-                      {demo.badge}
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-white mb-1 group-hover:text-[#d4af37] transition-colors">
-                    {demo.title}
-                  </h3>
-                  <p className="text-xs text-gray-400 mb-4 leading-relaxed">
-                    {demo.description}
-                  </p>
-
-                  {/* Capabilities List */}
-                  <div className="space-y-1.5 mb-5">
-                    {demo.capabilities.map((cap, i) => (
-                      <div key={i} className="flex items-center gap-2 text-xs text-gray-300">
-                        <CheckCircle2 className={`w-3.5 h-3.5 flex-shrink-0 ${demo.color}`} />
-                        <span className="truncate">{cap}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Credentials Snippet */}
-                  <div className="p-3 rounded-xl bg-black/50 border border-white/10 mb-5 text-xs font-mono">
-                    <div className="flex items-center justify-between text-gray-400 mb-1">
-                      <span>ID / User:</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-white font-bold">{demo.id}</span>
-                        <button
-                          type="button"
-                          onClick={() => handleCopy(demo.id, `${demo.role}-id`)}
-                          className="text-gray-400 hover:text-[#d4af37] p-0.5 transition-colors"
-                          title="Copy ID"
-                        >
-                          {copiedKey === `${demo.role}-id` ? (
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
-                          ) : (
-                            <Copy className="w-3.5 h-3.5" />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-gray-400">
-                      <span>Password:</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-white font-bold">{demo.pass}</span>
-                        <button
-                          type="button"
-                          onClick={() => handleCopy(demo.pass, `${demo.role}-pass`)}
-                          className="text-gray-400 hover:text-[#d4af37] p-0.5 transition-colors"
-                          title="Copy Password"
-                        >
-                          {copiedKey === `${demo.role}-pass` ? (
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
-                          ) : (
-                            <Copy className="w-3.5 h-3.5" />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card Action Buttons */}
-                <div className="space-y-2 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => handleQuickLogin(demo)}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold bg-[#d4af37] hover:bg-[#c49f2e] text-black transition-all shadow-md active:scale-98"
-                  >
-                    <LogIn className="w-4 h-4" />
-                    <span>1-Click Direct Sign In</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleFillRole(demo)}
-                    className="w-full py-2 px-3 rounded-xl text-xs font-medium text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
-                  >
-                    Fill In Form Below
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Manual Sign-In Form & Credentials View / Help Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Form */}
-          <div className="lg:col-span-6 bg-[#161616] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-bold text-white">Manual Sign In</h2>
-                <p className="text-xs text-gray-400">Sign in using any configured role identity</p>
-              </div>
-              <Lock className="w-5 h-5 text-[#d4af37]" />
+          {/* Logo & Heading */}
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#d4af37]/20 via-[#1a1a1a] to-black border border-[#d4af37]/40 shadow-lg shadow-[#d4af37]/15 mb-3">
+              <span className="text-2xl">🍽️</span>
             </div>
-
-            {errorMessage && (
-              <div className="mb-6 p-4 rounded-xl bg-red-950/40 border border-red-500/30 text-red-300 text-xs flex items-start gap-2.5">
-                <Info className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <p className="font-semibold mb-1">Authentication Error</p>
-                  <p>{errorMessage}</p>
-                </div>
-              </div>
-            )}
-
-            <form onSubmit={handleLogin} className="space-y-5">
-              <div>
-                <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
-                  Role ID / Email
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <input
-                    type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="e.g. admin, manager, user (or 'a', 'm', 'u')"
-                    className="w-full pl-10 pr-4 py-3 bg-[#222222] border border-[#333333] focus:border-[#d4af37] rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-[#d4af37] transition-all"
-                  />
-                </div>
-                <p className="text-[11px] text-gray-500 mt-1.5 flex items-center gap-1">
-                  <span>Quick shortcuts accepted:</span>
-                  <code className="text-[#d4af37] bg-white/5 px-1.5 py-0.5 rounded">a</code>
-                  <code className="text-[#d4af37] bg-white/5 px-1.5 py-0.5 rounded">m</code>
-                  <code className="text-[#d4af37] bg-white/5 px-1.5 py-0.5 rounded">u</code>
-                </p>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider">
-                    Password
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="text-xs text-[#d4af37] hover:text-[#e4bf47] flex items-center gap-1 transition-colors"
-                  >
-                    {showPassword ? (
-                      <>
-                        <EyeOff className="w-3.5 h-3.5" />
-                        <span>Hide password</span>
-                      </>
-                    ) : (
-                      <>
-                        <Eye className="w-3.5 h-3.5" />
-                        <span>View password</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
-                    <Lock className="w-4 h-4" />
-                  </div>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter password (e.g. admin123, manager123, user123)"
-                    className="w-full pl-10 pr-12 py-3 bg-[#222222] border border-[#333333] focus:border-[#d4af37] rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-[#d4af37] transition-all"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-[#d4af37] transition-colors"
-                    title={showPassword ? 'Hide password' : 'View password'}
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-3.5 px-6 rounded-xl font-bold text-sm bg-gradient-to-r from-[#d4af37] to-[#b8860b] text-black hover:from-[#e4bf47] hover:to-[#c8961b] transition-all duration-200 shadow-lg shadow-[#d4af37]/20 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
-              >
-                <LogIn className="w-4 h-4" />
-                <span>Sign In to Portal</span>
-              </button>
-            </form>
+            <h1 className="text-2xl font-bold tracking-tight text-white font-sans">
+              Sign in to <span className="text-[#d4af37]">TableHUB</span>
+            </h1>
+            <p className="text-xs text-gray-400 mt-1">
+              Select a demo role hint or enter your credentials
+            </p>
           </div>
 
-          {/* Credentials Help & View Panel */}
-          <div className="lg:col-span-6 bg-[#161616] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2.5">
-                <HelpCircle className="w-5 h-5 text-[#d4af37]" />
-                <h3 className="text-lg font-bold text-white">Credentials & Role View Help</h3>
-              </div>
+          {/* Role Hints Pill Bar (Real Login UX instead of large cards) */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2 font-medium">
+              <span>Quick Role Hints:</span>
               <button
                 type="button"
-                onClick={() => setShowHelpDetails(!showHelpDetails)}
-                className="text-xs text-gray-400 hover:text-white flex items-center gap-1 p-1 rounded-lg hover:bg-white/5 transition-colors"
+                onClick={() => setShowCredentialsDrawer(!showCredentialsDrawer)}
+                className="text-[#d4af37] hover:text-[#f4d03f] flex items-center gap-1 transition-colors"
               >
-                {showHelpDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                <span>{showHelpDetails ? 'Collapse' : 'Expand'}</span>
+                <HelpCircle className="w-3 h-3" />
+                <span>View ID/Pass</span>
               </button>
             </div>
 
-            <p className="text-xs text-gray-400 mb-5">
-              TableHUB provides built-in role verification without external databases. Click the copy icon next to any value or use the 1-click login buttons above.
-            </p>
+            <div className="grid grid-cols-3 gap-2">
+              {ROLE_HINTS.map((hint) => {
+                const Icon = hint.icon;
+                const isSelected = selectedRoleKey === hint.key;
+                return (
+                  <button
+                    key={hint.key}
+                    type="button"
+                    onClick={() => handleSelectRoleHint(hint)}
+                    className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-xs transition-all duration-200 group ${
+                      isSelected
+                        ? hint.activeBorder
+                        : 'border-[#282828] bg-[#1a1a1a] text-gray-300 hover:border-[#d4af37]/40 hover:bg-[#202020]'
+                    }`}
+                    title={`Click to fill credentials for ${hint.label} (${hint.shortcut})`}
+                  >
+                    <div className="flex items-center gap-1 mb-0.5">
+                      <Icon className={`w-3.5 h-3.5 ${hint.color}`} />
+                      <span className="font-semibold text-white group-hover:text-[#d4af37] transition-colors">
+                        {hint.label}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-gray-400 font-mono">
+                      {hint.shortcut}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-            {showHelpDetails && (
-              <div className="space-y-4">
-                <div className="overflow-x-auto rounded-xl border border-white/10">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-black/60 text-gray-400 uppercase tracking-wider font-semibold border-b border-white/10">
-                      <tr>
-                        <th className="py-2.5 px-3">Role</th>
-                        <th className="py-2.5 px-3">ID / Shortcut</th>
-                        <th className="py-2.5 px-3">Password</th>
-                        <th className="py-2.5 px-3">Destination</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/5 text-gray-300 font-mono">
-                      {DEMO_ROLES.map((demo) => (
-                        <tr key={demo.role} className="hover:bg-white/5 transition-colors">
-                          <td className="py-3 px-3 font-sans font-bold text-white flex items-center gap-1.5">
-                            <span className={demo.color}>•</span>
-                            <span>{demo.title}</span>
-                          </td>
-                          <td className="py-3 px-3">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-[#d4af37] font-semibold">{demo.id}</span>
-                              <span className="text-gray-500 font-sans text-[10px]">('{demo.aliases[1]}')</span>
-                              <button
-                                type="button"
-                                onClick={() => handleCopy(demo.id, `tbl-${demo.role}-id`)}
-                                className="text-gray-500 hover:text-[#d4af37] transition-colors"
-                                title="Copy ID"
-                              >
-                                {copiedKey === `tbl-${demo.role}-id` ? (
-                                  <Check className="w-3 h-3 text-emerald-400" />
-                                ) : (
-                                  <Copy className="w-3 h-3" />
-                                )}
-                              </button>
-                            </div>
-                          </td>
-                          <td className="py-3 px-3">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-gray-200">{demo.pass}</span>
-                              <span className="text-gray-500 font-sans text-[10px]">('{demo.passAliases[1]}')</span>
-                              <button
-                                type="button"
-                                onClick={() => handleCopy(demo.pass, `tbl-${demo.role}-pass`)}
-                                className="text-gray-500 hover:text-[#d4af37] transition-colors"
-                                title="Copy Password"
-                              >
-                                {copiedKey === `tbl-${demo.role}-pass` ? (
-                                  <Check className="w-3 h-3 text-emerald-400" />
-                                ) : (
-                                  <Copy className="w-3 h-3" />
-                                )}
-                              </button>
-                            </div>
-                          </td>
-                          <td className="py-3 px-3 font-sans">
-                            <span className="inline-block px-2 py-0.5 rounded bg-white/5 text-gray-300 text-[11px] border border-white/5">
-                              #{demo.path}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="p-4 rounded-xl bg-gradient-to-br from-[#d4af37]/10 to-transparent border border-[#d4af37]/20">
-                  <h4 className="text-xs font-bold text-[#d4af37] mb-1.5 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    Interactive Testing Tip
-                  </h4>
-                  <p className="text-xs text-gray-300 leading-relaxed">
-                    Once signed in, you can switch roles or return to the customer booking engine at any time using the portal switcher in the bottom sidebar or navigation bar.
-                  </p>
-                </div>
+          {/* Collapsible Role Credentials Helper Panel */}
+          {showCredentialsDrawer && (
+            <div className="mb-5 p-3.5 rounded-2xl bg-black/60 border border-white/10 text-xs animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-semibold text-[#d4af37] flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  Credentials Reference
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowCredentialsDrawer(false)}
+                  className="text-gray-400 hover:text-white text-[11px]"
+                >
+                  Close
+                </button>
               </div>
-            )}
+
+              <div className="space-y-1.5 text-[11px] font-mono">
+                {ROLE_HINTS.map((r) => (
+                  <div key={r.key} className="flex items-center justify-between p-1.5 rounded-lg bg-white/5">
+                    <span className="font-sans font-medium text-gray-300">{r.label}:</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-400">{r.id} / {r.pass}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleCopy(r.id, `${r.key}-id`)}
+                        className="text-gray-400 hover:text-[#d4af37]"
+                        title="Copy ID"
+                      >
+                        {copiedKey === `${r.key}-id` ? (
+                          <Check className="w-3 h-3 text-emerald-400" />
+                        ) : (
+                          <Copy className="w-3 h-3" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Error Notice */}
+          {errorMessage && (
+            <div className="mb-5 p-3 rounded-xl bg-red-950/40 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
+              <Info className="w-4 h-4 text-red-400 flex-shrink-0" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleLogin} className="space-y-4">
+            {/* Email / ID */}
+            <div>
+              <label className="block text-xs font-medium text-gray-300 mb-1.5">
+                Email or Role ID
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <input
+                  type="text"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setSelectedRoleKey(null);
+                  }}
+                  placeholder="e.g. admin, manager, or user"
+                  className="w-full pl-10 pr-4 py-2.5 bg-[#1e1e1e] border border-[#2e2e2e] focus:border-[#d4af37] rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-[#d4af37] transition-all"
+                  autoComplete="username"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Password with View Toggle */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-medium text-gray-300">
+                  Password
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-xs text-gray-400 hover:text-[#d4af37] flex items-center gap-1 transition-colors"
+                >
+                  {showPassword ? (
+                    <>
+                      <EyeOff className="w-3.5 h-3.5" />
+                      <span>Hide</span>
+                    </>
+                  ) : (
+                    <>
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>View</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
+                  <Lock className="w-4 h-4" />
+                </div>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
+                  className="w-full pl-10 pr-11 py-2.5 bg-[#1e1e1e] border border-[#2e2e2e] focus:border-[#d4af37] rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-[#d4af37] transition-all"
+                  autoComplete="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-[#d4af37] transition-colors"
+                  title={showPassword ? 'Hide password' : 'View password'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Remember Me & Shortcuts Hint */}
+            <div className="flex items-center justify-between text-xs text-gray-400 pt-1">
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-3.5 h-3.5 rounded bg-[#1e1e1e] border-[#3e3e3e] text-[#d4af37] focus:ring-0 focus:ring-offset-0 accent-[#d4af37]"
+                />
+                <span>Remember session</span>
+              </label>
+              <span className="text-[11px] text-gray-500">Shortcuts: a, m, u</span>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-[#d4af37] via-[#f4d03f] to-[#b8860b] text-black hover:brightness-110 active:scale-[0.98] transition-all duration-200 shadow-lg shadow-[#d4af37]/25 flex items-center justify-center gap-2 cursor-pointer mt-2"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Sign In</span>
+            </button>
+          </form>
+
+          {/* Continue as Guest */}
+          <div className="mt-6 pt-5 border-t border-white/10 text-center">
+            <p className="text-xs text-gray-400">
+              Just browsing restaurants?{' '}
+              <Link to="/" className="text-[#d4af37] hover:underline font-semibold ml-1">
+                Explore as Guest &rarr;
+              </Link>
+            </p>
           </div>
         </div>
-      </div>
+      </main>
 
       {/* Footer */}
-      <div className="max-w-6xl w-full mx-auto text-center pt-6 border-t border-white/10 text-xs text-gray-500">
-        <p>TableHUB &bull; Next-Gen Luxury Restaurant Operating System &bull; Live GitHub Pages Edition</p>
-      </div>
+      <footer className="max-w-xl w-full mx-auto text-center text-xs text-gray-500">
+        <p>TableHUB &bull; Luxury Dining & Table Reservation Engine</p>
+      </footer>
     </div>
   );
 }

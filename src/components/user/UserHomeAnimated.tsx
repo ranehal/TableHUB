@@ -574,11 +574,14 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
 
 
             {/* Right Side - Spline 3D Scene */}
-            <div className="lg:block h-[800px] w-[800px] lg:translate-x-[300px]">
-              <div className="relative w-full h-full rounded-2xl cursor-crosshair hover:cursor-move pointer-events-auto">
+            <div className="w-full flex items-center justify-center relative min-h-[450px] sm:min-h-[550px] lg:min-h-[700px] xl:min-h-[750px]">
+              <div className="relative w-full h-full min-h-[450px] sm:min-h-[550px] lg:min-h-[700px] flex items-center justify-center rounded-2xl cursor-crosshair hover:cursor-move pointer-events-auto">
+                {/* Subtle back-glow to highlight 3D luxury geometry without clipping */}
+                <div className="absolute inset-0 bg-radial from-[#d4af37]/15 via-[#d4af37]/5 to-transparent blur-3xl pointer-events-none -z-10 rounded-full scale-90" />
+                
                 <ErrorBoundary
                   fallback={
-                    <div className="w-full h-full bg-[#1a1a1a] flex items-center justify-center">
+                    <div className="w-full h-full min-h-[450px] bg-[#1a1a1a] rounded-2xl flex items-center justify-center overflow-hidden border border-[#d4af37]/20">
                       <img 
                         src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=600&fit=crop" 
                         alt="Dining Experience" 
@@ -587,7 +590,7 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
                     </div>
                   }
                 >
-                  <canvas ref={canvasRef} className="w-full h-full" />
+                  <canvas ref={canvasRef} className="w-full h-full block touch-none" />
                 </ErrorBoundary>
               </div>
             </div>

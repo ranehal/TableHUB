@@ -16,7 +16,7 @@
   <b>An end-to-end multi-tenant dining ecosystem built with bespoke micro-interactions, an interactive Spline 3D viewport, real-time spatial table allocation, multi-gateway checkouts, and dedicated management portals for Guests, Restaurateurs, and Platform Administrators.</b>
 </p>
 
-[✨ Live Demo](https://ranehal.github.io/TableHUB/) • [📸 Visual Showcase](#-visual-showcase) • [📐 System Architecture](#-system-architecture) • [⚡ Quickstart](#-quickstart--local-development) • [🔑 Mock Credentials](#-quick-test-credentials)
+[✨ Live Demo](https://ranehal.github.io/TableHUB/) • [📸 Visual Showcase](#-visual-showcase) • [📐 System Architecture](#-system-architecture) • [⚡ Quickstart](#-quickstart--local-development) • [🔑 Role Credentials](#-role-based-access--demo-credentials)
 
 </div>
 
@@ -42,11 +42,21 @@ TableHUB includes a built-in interactive **Role-Based Authentication Gateway** w
 | **👨‍🍳 Restaurant Manager** | `manager` *(or `restaurant`)* | `m` | `manager123` *(or `m`)* | [`#/restaurant`](https://ranehal.github.io/TableHUB/#/restaurant) | Live floorplan table status mutation, reservation buffer rules, culinary menu inventory, booking queue |
 | **🍷 Dining Guest** | `user` *(or `guest`)* | `u` | `user123` *(or `u`)* | [`#/`](https://ranehal.github.io/TableHUB/#/) | Luxury restaurant discovery, 3D WebGL table selection, multi-rail checkout (bKash/Nagad/Card), digital QR passes |
 
-### 💡 Interactive Login Helper Features:
-* ⚡ **1-Click Direct Sign In**: Click any role card on the [Login Screen](https://ranehal.github.io/TableHUB/#/login) to immediately authenticate and navigate to its dedicated portal.
-* 👁️ **Password Visibility Toggle ("Pass View")**: Seamlessly inspect or hide masked credentials in the password input using the eye toggle icon.
-* 📋 **One-Click Credential Copying**: Instant clipboard copy buttons for IDs and passwords.
-* 🔁 **Cross-Portal Navigation & Session Banners**: Active sessions display a sticky top banner or sidebar widget with role indicators, allowing instantaneous switching between Admin, Operator, and Customer views without losing state.
+### 💡 Real Login Page with Role Hints & Helpers:
+* 🎯 **Sleek Role Hint Pills**: Click any role pill (`👑 Admin (a/a)`, `👨‍🍳 Manager (m/m)`, `🍷 Guest Diner (u/u)`) directly on the authentic luxury login card to instantly auto-fill credentials.
+* 👁️ **Password Visibility Toggle ("Pass View")**: Inspect or mask entered passwords in real time via the interactive eye toggle button.
+* 📋 **One-Click Credential Copying**: Open the "View ID/Pass" drawer to copy credentials or inspect role scopes.
+* 🔁 **Cross-Portal Navigation & Session Banners**: Seamlessly switch between Super-Admin, Restaurant Operator, and Guest views using sticky role indicators.
+
+---
+
+## 🏷️ GitHub Repository "About" Metadata
+
+Copy and paste the following into your GitHub repository's **About** sidebar settings:
+
+* **Description**: `Next-Generation Luxury Restaurant Operating System & 3D Table Reservation Engine featuring interactive Spline 3D viewport, multi-portal RBAC, and real-time floorplan allocation.`
+* **Website**: `https://ranehal.github.io/TableHUB/`
+* **Topics**: `table-reservation`, `restaurant-management`, `spline-3d`, `react`, `typescript`, `vite`, `tailwind-css`, `framer-motion`, `zustand`, `github-pages`, `luxury-dining`
 
 ---
 
