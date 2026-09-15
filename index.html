@@ -1,15 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>TableHUB | Luxury Restaurant Management & 3D Table Reservation Engine</title>
+    <meta name="title" content="TableHUB | Luxury Restaurant Management & 3D Table Reservation Engine" />
+    <meta name="description" content="Next-generation multi-tenant dining ecosystem featuring interactive Spline 3D table selection, spatial floorplan allocation, multi-rail checkout, and role-based management portals for Guests, Restaurateurs, and Platform Administrators." />
+    <meta name="keywords" content="table reservation, restaurant management system, 3D table booking, spline 3d, dining floorplan, react, tailwind, typescript" />
+    <meta name="author" content="ranehal" />
+    <meta name="theme-color" content="#0f0f0f" />
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Restaurant Management System</title>
-          <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.28/build/spline-viewer.js" async></script>
-        </head>
-    <body>
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
-  
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ranehal.github.io/TableHUB/" />
+    <meta property="og:title" content="TableHUB | Luxury Restaurant Management & 3D Table Reservation Engine" />
+    <meta property="og:description" content="Next-generation multi-tenant dining ecosystem featuring interactive Spline 3D table selection, spatial floorplan allocation, multi-rail checkout, and role-based management portals." />
+    <meta property="og:image" content="https://raw.githubusercontent.com/ranehal/TableHUB/master/docs/screenshots/01_hero_home.webp" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://ranehal.github.io/TableHUB/" />
+    <meta property="twitter:title" content="TableHUB | Luxury Restaurant Management & 3D Table Reservation Engine" />
+    <meta property="twitter:description" content="Next-generation multi-tenant dining ecosystem featuring interactive Spline 3D table selection, spatial floorplan allocation, multi-rail checkout, and role-based management portals." />
+    <meta property="twitter:image" content="https://raw.githubusercontent.com/ranehal/TableHUB/master/docs/screenshots/01_hero_home.webp" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>" />
+
+    <!-- Spline Viewer Web Component -->
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.28/build/spline-viewer.js"></script>
+  </head>
+  <body class="bg-[#0f0f0f] text-gray-100 antialiased selection:bg-[#d4af37]/30 selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

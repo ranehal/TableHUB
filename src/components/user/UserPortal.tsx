@@ -11,6 +11,10 @@ import { EnhancedBookingModal } from './EnhancedBookingModal';
 import { Restaurant, Booking } from '../../types';
 import { Toaster } from '../ui/sonner';
 
+import { useAuthStore } from '../../store/useAuthStore';
+import { useNavigate } from 'react-router-dom';
+import { ShieldCheck, Store, LogOut } from 'lucide-react';
+
 export type UserView = 'home' | 'search' | 'restaurant' | 'bookings' | 'profile' | 'confirmation';
 
 export function UserPortal() {
@@ -21,8 +25,9 @@ export function UserPortal() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showBookingModal, setShowBookingModal] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<{ id: string; name: string; email: string } | null>(null);
+
+  const { user, isAuthenticated, login: storeLogin, logout: storeLogout } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -56,8 +61,7 @@ export function UserPortal() {
   };
 
   const handleAuthSuccess = (userData: { id: string; name: string; email: string }) => {
-    setIsAuthenticated(true);
-    setUser(userData);
+    storeLogin({ id: userData.id, name: userData.name, email: userData.email, role: 'user' });
     setShowAuthModal(false);
     if (selectedRestaurant) {
       setShowBookingModal(true);
@@ -67,6 +71,44 @@ export function UserPortal() {
   return (
     <div className="min-h-screen">
       <Toaster position="top-center" richColors />
+
+      {/* Role Banner if logged in as Admin or Restaurant Manager */}
+      {isAuthenticated && user && (user.role === 'admin' || user.role === 'restaurant') && (
+        <div className="bg-gradient-to-r from-black via-[#1c1917] to-black border-b border-[#d4af37]/30 py-2 px-4 text-xs flex items-center justify-between z-50 sticky top-0 backdrop-blur-md">
+          <div className="flex items-center gap-2 text-gray-200">
+            {user.role === 'admin' ? (
+              <ShieldCheck className="w-4 h-4 text-amber-400" />
+            ) : (
+              <Store className="w-4 h-4 text-blue-400" />
+            )}
+            <span>
+              Active Session: <strong className="text-white">{user.name}</strong> ({user.role.toUpperCase()})
+            </span>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              onClick={() => navigate(user.role === 'admin' ? '/admin' : '/restaurant')}
+              className="px-3 py-1 rounded bg-[#d4af37] text-black font-semibold hover:bg-[#b8860b] transition-colors flex items-center gap-1.5"
+            >
+              <span>Open {user.role === 'admin' ? 'Admin' : 'Operator'} Portal</span>
+              <span>&rarr;</span>
+            </button>
+            <button
+              onClick={() => navigate('/login')}
+              className="px-2.5 py-1 rounded border border-white/20 text-gray-300 hover:text-white hover:border-white/40 transition-colors"
+            >
+              Switch Role
+            </button>
+            <button
+              onClick={() => storeLogout()}
+              className="p-1 text-gray-400 hover:text-red-400 transition-colors"
+              title="Sign Out"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
       
       {currentView === 'home' && (
         <UserHome 

@@ -32,15 +32,21 @@ Whether you're a diner seeking a scenic 2-seater window table for a candlelit di
 
 ---
 
-## 🔑 Quick-Test Credentials
+## 🔑 Role-Based Access & Demo Credentials
 
-You can test all 3 role perspectives directly on the [Live Demo](https://ranehal.github.io/TableHUB/#/login) without setting up a backend:
+TableHUB includes a built-in interactive **Role-Based Authentication Gateway** with zero-friction demo testing. You can test all 3 role perspectives directly on the [Live Demo](https://ranehal.github.io/TableHUB/#/login) without setting up a backend:
 
-| Role | Email / ID | Password | Destination Portal | Permissions & Scope |
-| :--- | :--- | :--- | :--- | :--- |
-| **👑 Super Admin** | `a` | `a` | `#/admin` | Platform analytics, restaurant approvals, dispute resolution, customer governance |
-| **👨‍🍳 Restaurant Manager** | `m` | `m` | `#/restaurant` | Live floorplan & table status mutation, reservation rules, menu editor, booking queue |
-| **🍷 Diner / Guest** | `u` | `u` | `#/` | Discover restaurants, interactive booking modal, multi-rail checkout, digital QR pass |
+| Role | Standard ID | Shortcut | Password | Destination Route | Permissions & Governance Scope |
+| :--- | :--- | :---: | :--- | :--- | :--- |
+| **👑 Super Admin** | `admin` *(or `admin@tablehub.com`)* | `a` | `admin123` *(or `a`)* | [`#/admin`](https://ranehal.github.io/TableHUB/#/admin) | Platform financial GMV analytics, restaurant KYC vetting/approvals, dispute settlement, diner governance |
+| **👨‍🍳 Restaurant Manager** | `manager` *(or `restaurant`)* | `m` | `manager123` *(or `m`)* | [`#/restaurant`](https://ranehal.github.io/TableHUB/#/restaurant) | Live floorplan table status mutation, reservation buffer rules, culinary menu inventory, booking queue |
+| **🍷 Dining Guest** | `user` *(or `guest`)* | `u` | `user123` *(or `u`)* | [`#/`](https://ranehal.github.io/TableHUB/#/) | Luxury restaurant discovery, 3D WebGL table selection, multi-rail checkout (bKash/Nagad/Card), digital QR passes |
+
+### 💡 Interactive Login Helper Features:
+* ⚡ **1-Click Direct Sign In**: Click any role card on the [Login Screen](https://ranehal.github.io/TableHUB/#/login) to immediately authenticate and navigate to its dedicated portal.
+* 👁️ **Password Visibility Toggle ("Pass View")**: Seamlessly inspect or hide masked credentials in the password input using the eye toggle icon.
+* 📋 **One-Click Credential Copying**: Instant clipboard copy buttons for IDs and passwords.
+* 🔁 **Cross-Portal Navigation & Session Banners**: Active sessions display a sticky top banner or sidebar widget with role indicators, allowing instantaneous switching between Admin, Operator, and Customer views without losing state.
 
 ---
 
@@ -106,7 +112,7 @@ graph TD
 
 | Luxury Hero Section with Spline 3D Viewport | Meal-Time Reservation Matrix |
 | :---: | :---: |
-| ![Hero Home](docs/screenshots/01_hero_home.png) | ![Dining Features](docs/screenshots/02_dining_features.png) |
+| ![Hero Home](docs/screenshots/01_hero_home.webp) | ![Dining Features](docs/screenshots/02_dining_features.webp) |
 | *Real-time 3D canvas interaction, live search, and luxury dark-gold typography.* | *Smart meal-time filtering (Breakfast, Brunch, Lunch, Snacks, Dinner).* |
 
 </div>
@@ -128,7 +134,7 @@ graph TD
 
 | Venue Profile & Interactive Menu Explorer | Authentication & Guest Identity Modal |
 | :---: | :---: |
-| ![Restaurant Profile](docs/screenshots/05_restaurant_profile.png) | ![Auth Modal](docs/screenshots/06_auth_modal.png) |
+| ![Restaurant Profile](docs/screenshots/05_restaurant_profile.webp) | ![Auth Modal](docs/screenshots/06_auth_modal.png) |
 | *High-res imagery, operating hours, amenities, and categorized dishes.* | *MagicCard auth with Google OAuth, SMS OTP, and instant mock sign-in.* |
 
 </div>
@@ -137,7 +143,7 @@ graph TD
 
 | Enhanced Booking Modal (Date, Guests, Meal) | Spatial Table View & Window-Side Selection |
 | :---: | :---: |
-| ![Booking Modal](docs/screenshots/07_table_booking_modal.png) | ![Table Selection](docs/screenshots/08_table_selection_view.png) |
+| ![Booking Modal](docs/screenshots/07_table_booking_modal.png) | ![Table Selection](docs/screenshots/08_table_selection_view.webp) |
 | *HeroUI DatePicker with dynamic slot generation based on party size.* | *Floorplan preview showing 2/3/4-seater layouts and window proximity.* |
 
 </div>
@@ -190,7 +196,7 @@ graph TD
 
 | Super-Admin Global Platform Overview | Restaurant Onboarding & Vetting Queue |
 | :---: | :---: |
-| ![Admin Dashboard](docs/screenshots/18_admin_dashboard.png) | ![Restaurant Approval](docs/screenshots/19_admin_restaurant_approval.png) |
+| ![Admin Dashboard](docs/screenshots/18_admin_dashboard.webp) | ![Restaurant Approval](docs/screenshots/19_admin_restaurant_approval.png) |
 | *System-wide GMV, active dining seats, server load, and tenant count.* | *KYC verification, food hygiene certificate review, and instant activation.* |
 
 </div>
@@ -199,7 +205,7 @@ graph TD
 
 | Customer Governance & Trust Score | Escrow Dispute Settlement Center |
 | :---: | :---: |
-| ![Customer Management](docs/screenshots/20_admin_customer_management.png) | ![Dispute Resolution](docs/screenshots/21_admin_dispute_resolution.png) |
+| ![Customer Management](docs/screenshots/20_admin_customer_management.png) | ![Dispute Resolution](docs/screenshots/21_admin_dispute_resolution.webp) |
 | *Audit diner activity, reliability index, no-show strikes, and VIP status.* | *Two-sided escrow arbitration for missed reservations and refunds.* |
 
 </div>
@@ -208,7 +214,7 @@ graph TD
 
 | Platform-Wide Financials & Growth Telemetry | Role-Based Gateway Login |
 | :---: | :---: |
-| ![Platform Analytics](docs/screenshots/22_admin_platform_analytics.png) | ![Portal Login](docs/screenshots/11_portal_login.png) |
+| ![Platform Analytics](docs/screenshots/22_admin_platform_analytics.webp) | ![Portal Login](docs/screenshots/11_portal_login.png) |
 | *Cohort retention, commission earnings, churn analysis, and volume trends.* | *Unified credentials portal with automatic role-based redirect routing.* |
 
 </div>
@@ -398,21 +404,41 @@ The API server listens on `http://localhost:3001` with CORS enabled for frontend
 
 ## 🚀 GitHub Pages Deployment Guide
 
-This project is pre-configured for automated deployment to GitHub Pages.
+TableHUB is live on GitHub Pages at:
+👉 **[https://ranehal.github.io/TableHUB/](https://ranehal.github.io/TableHUB/)**
 
-### Automated CI/CD (Recommended)
-1. Push your changes to the `master` branch:
+### 🧭 Direct Portal Navigation Links:
+* **🍷 Consumer Discovery & 3D Dining**: [https://ranehal.github.io/TableHUB/#/](https://ranehal.github.io/TableHUB/#/)
+* **🔑 Role-Based Login & Credentials Helper**: [https://ranehal.github.io/TableHUB/#/login](https://ranehal.github.io/TableHUB/#/login)
+* **👨‍🍳 Restaurant Management Portal**: [https://ranehal.github.io/TableHUB/#/restaurant](https://ranehal.github.io/TableHUB/#/restaurant)
+* **👑 Super-Admin Platform Command Center**: [https://ranehal.github.io/TableHUB/#/admin](https://ranehal.github.io/TableHUB/#/admin)
+
+---
+
+### Option A: Automated CI/CD via GitHub Actions (Recommended)
+Every push to the `master` branch triggers the GitHub Actions workflow at [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml):
+1. Pushes code to `master`:
    ```bash
    git add .
-   git commit -m "Deploy update"
+   git commit -m "Deploy latest build with role-based auth"
    git push origin master
    ```
-2. Navigate to your repository on GitHub: **Settings > Pages**.
-3. Under **Build and deployment > Source**, select **GitHub Actions**.
-4. The `.github/workflows/deploy.yml` workflow will automatically build and publish the site at:
-   ```
-   https://<your-username>.github.io/TableHUB/
-   ```
+2. GitHub Actions checks out the repository, installs dependencies via `npm ci`, compiles production assets via `npm run build`, and automatically publishes to the `github-pages` environment.
+3. Verify the deployment in your GitHub repository:
+   * **Settings** &rarr; **Pages** &rarr; **Source**: Select **GitHub Actions**.
+
+### Option B: Manual One-Command Deployment via CLI (`gh-pages`)
+You can also deploy directly from your local terminal at any time:
+```bash
+# Automatically runs 'npm run build' then pushes to the 'gh-pages' branch:
+npm run deploy
+```
+* Under **Settings** &rarr; **Pages**, ensure the source branch is configured accordingly (`gh-pages` branch or `GitHub Actions`).
+
+### 🛡️ Zero-404 Routing Architecture
+Static hosting providers like GitHub Pages typically return HTTP 404 errors when visitors refresh a dynamic sub-route. TableHUB resolves this through two protective mechanisms:
+1. **Hash-Based Routing (`HashRouter`)**: Uses URL fragment identifiers (`#/restaurant`, `#/admin`, `#/login`) which are resolved entirely in-memory by React Router.
+2. **Deterministic `public/404.html` Redirection**: Any rogue non-hash requests are automatically re-encoded by `404.html` and handed back to the SPA root without data loss.
 
 ---
 

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Application } from '@splinetool/runtime';
-import { Search, MapPin, Star, Calendar, User, History, Home, Compass, Tag, Heart, Bell, HelpCircle, X, Coffee, Sun, Sunset, Moon, Utensils, ChevronRight } from 'lucide-react';
+import { Search, MapPin, Star, Calendar, User, History, Home, Compass, Tag, Heart, Bell, HelpCircle, X, Coffee, Sun, Sunset, Moon, Utensils, ChevronRight, ShieldCheck } from 'lucide-react';
 import { mockRestaurants, mockMenuItems } from '../../data/mockData';
 import { Restaurant } from '../../types';
 import { UserView } from './UserPortal';
@@ -29,6 +30,7 @@ interface UserHomeProps {
 }
 
 export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick, isAuthenticated }: UserHomeProps) {
+  const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState('');
   const [searchMode, setSearchMode] = useState<'food' | 'restaurant'>('food');
   const [showNotifications, setShowNotifications] = useState(false);
@@ -259,6 +261,15 @@ export function UserHome({ onSearch, onSelectRestaurant, onNavigate, onAuthClick
               >
                 <HelpCircle className="w-4 h-4 text-[#d4af37]" />
               </AnimatedIconButton>
+
+              <ShinyButton
+                onClick={() => navigate('/login')}
+                className="px-3.5 py-2 text-xs sm:text-sm flex items-center gap-1.5 bg-[#141414] border border-[#d4af37]/40 text-[#d4af37] hover:border-[#d4af37] hover:bg-[#d4af37]/10 transition-all font-semibold"
+                title="Role-based Login: Admin, Manager & Guest with verified demo credentials"
+              >
+                <ShieldCheck className="w-4 h-4 text-[#d4af37]" />
+                <span className="hidden sm:inline">Role Login</span>
+              </ShinyButton>
 
               {isAuthenticated ? (
                 <>

@@ -1,6 +1,8 @@
 {
-      "name": "Restaurant Management System",
+      "name": "tablehub",
       "version": "0.1.0",
+      "description": "Next-Generation Luxury Restaurant Operating System & 3D Table Reservation Engine",
+      "homepage": "https://ranehal.github.io/TableHUB",
       "private": true,
       "dependencies": {
             "@heroui/react": "^2.8.7",
@@ -63,6 +65,8 @@
       "scripts": {
             "dev": "vite",
             "build": "vite build",
-            "preview": "vite preview"
+            "preview": "vite preview",
+            "predeploy": "npm run build",
+            "deploy": "gh-pages -d build"
       }
 }
